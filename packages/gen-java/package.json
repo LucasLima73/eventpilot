@@ -1,7 +1,7 @@
 {
-  "name": "@eventpilot/feature-dlq",
+  "name": "@eventpilot/gen-java",
   "version": "0.0.1",
-  "description": "DLQ/retry feature module for EventPilot: generates a retry-with-backoff + dead-letter helper per service.",
+  "description": "Java language generator for EventPilot (producer/consumer templates, Gradle project).",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
@@ -27,8 +27,7 @@
   },
   "dependencies": {
     "@eventpilot/plugin-api": "workspace:*",
-    "handlebars": "^4.7.8",
-    "zod": "^3.23.8"
+    "handlebars": "^4.7.8"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

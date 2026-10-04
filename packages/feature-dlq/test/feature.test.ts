@@ -2,10 +2,15 @@ import { describe, expect, it } from "vitest";
 
 import { dlqFeature } from "../src/feature.js";
 
-const service = { name: "order-service", language: "node-ts", produces: [], consumes: [] };
+const service = {
+  name: "order-service",
+  language: "node-ts",
+  produces: [],
+  consumes: ["payment.confirmed"],
+};
 
 describe("dlqFeature", () => {
-  it("generates a dlq.ts helper per service with the configured retry options", async () => {
+  it("generates a dlq.ts helper per consuming service with the configured retry options", async () => {
     const files = await dlqFeature.apply({
       projectName: "orders-platform",
       services: [service],
@@ -32,11 +37,32 @@ describe("dlqFeature", () => {
     expect(files[0].content).toContain('backoff: "exponential"');
   });
 
-  it("throws a clear error for an unsupported language", async () => {
+  it("ignores a pure producer in an unsupported language", async () => {
+    const files = await dlqFeature.apply({
+      projectName: "orders-platform",
+      services: [
+        service,
+        {
+          name: "payment-service",
+          language: "java",
+          produces: ["payment.confirmed"],
+          consumes: [],
+        },
+      ],
+      config: {},
+      outputDir: "services",
+    });
+
+    expect(files.map((f) => f.path)).toEqual(["services/order-service/src/dlq.ts"]);
+  });
+
+  it("throws a clear error for an unsupported language that consumes events", async () => {
     await expect(
       dlqFeature.apply({
         projectName: "orders-platform",
-        services: [{ name: "payment-service", language: "java", produces: [], consumes: [] }],
+        services: [
+          { name: "payment-service", language: "java", produces: [], consumes: ["order.created"] },
+        ],
         config: {},
         outputDir: "services",
       }),

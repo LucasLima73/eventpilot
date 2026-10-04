@@ -234,7 +234,7 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 - [x] `add <feature>` (implementado para `dlq` e `outbox`; metrics/replay ainda recusam com mensagem clara)
 - [x] Tópicos declarados no YAML agora são provisionados de verdade no broker (`eventpilot up`/`generate`), incluindo `<topic>.dlq`
 - [ ] `validate` com AsyncAPI (hoje só valida a forma do YAML, não o schema dos contratos)
-- [ ] Gerador Java
+- [x] Gerador Java (`@eventpilot/gen-java`, projeto Gradle, producer/consumer com `kafka-clients`; sem DLQ/Outbox ainda — essas features só suportam node-ts)
 
 **Fase 3 — Observabilidade**
 

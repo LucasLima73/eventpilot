@@ -54,6 +54,20 @@ export async function init(options: InitOptions): Promise<void> {
     return;
   }
 
+  const languageChoice = await p.select({
+    message: `Language for "${serviceName}"`,
+    options: [
+      { value: "node-ts", label: "Node / TypeScript" },
+      { value: "java", label: "Java (Gradle)" },
+    ],
+    initialValue: "node-ts",
+  });
+  if (p.isCancel(languageChoice)) {
+    p.cancel("Cancelled.");
+    return;
+  }
+  const language = languageChoice as "node-ts" | "java";
+
   const producesRaw = await p.text({
     message: `Events "${serviceName}" produces (comma-separated, leave empty if none)`,
     placeholder: "order.created, order.cancelled",
@@ -98,7 +112,7 @@ export async function init(options: InitOptions): Promise<void> {
     services: [
       {
         name: serviceName.trim(),
-        language: "node-ts",
+        language,
         produces,
         consumes,
       },

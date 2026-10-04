@@ -1,0 +1,20 @@
+package com.eventpilot.generated;
+
+public class {{pascalCase service.name}}Main {
+  public static void main(String[] args) throws Exception {
+    String brokers = System.getenv().getOrDefault("EVENTPILOT_BROKERS", "localhost:9092");
+
+    try (
+        {{pascalCase service.name}}Producer producer = new {{pascalCase service.name}}Producer(brokers);
+        {{pascalCase service.name}}Consumer consumer = new {{pascalCase service.name}}Consumer(brokers, "{{service.name}}")
+    ) {
+      Thread consumerThread = new Thread(() ->
+          consumer.start((topic, payload, correlationId, causationId) ->
+              System.out.printf("[{{service.name}}] received on %s: %s%n", topic, payload)));
+      consumerThread.start();
+
+      System.out.println("{{service.name}} is running.");
+      consumerThread.join();
+    }
+  }
+}

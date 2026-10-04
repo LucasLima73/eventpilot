@@ -1,0 +1,61 @@
+package com.eventpilot.generated;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.header.Header;
+
+import java.time.Duration;
+import java.util.List;
+import java.util.Properties;
+
+public class {{pascalCase service.name}}Consumer implements AutoCloseable {
+  public interface MessageHandler {
+    void onMessage(String topic, String payloadJson, String correlationId, String causationId);
+  }
+
+  private final KafkaConsumer<String, String> consumer;
+  private volatile boolean running = true;
+
+  public {{pascalCase service.name}}Consumer(String brokers, String groupId) {
+    Properties props = new Properties();
+    props.put("bootstrap.servers", brokers);
+    props.put("group.id", groupId);
+    props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("auto.offset.reset", "latest");
+    this.consumer = new KafkaConsumer<>(props);
+    this.consumer.subscribe(List.of({{#each service.consumes}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}));
+  }
+
+  public void start(MessageHandler handler) {
+    while (running) {
+      ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(500));
+      for (ConsumerRecord<String, String> record : records) {
+        handler.onMessage(
+            record.topic(),
+            record.value(),
+            headerValue(record, "x-correlation-id"),
+            headerValue(record, "x-causation-id"));
+      }
+    }
+  }
+
+  private static String headerValue(ConsumerRecord<String, String> record, String key) {
+    for (Header header : record.headers()) {
+      if (header.key().equals(key)) {
+        return new String(header.value());
+      }
+    }
+    return null;
+  }
+
+  public void stop() {
+    running = false;
+  }
+
+  @Override
+  public void close() {
+    consumer.close();
+  }
+}

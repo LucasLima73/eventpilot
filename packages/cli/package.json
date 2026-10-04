@@ -23,6 +23,7 @@
     "@eventpilot/core": "workspace:*",
     "@eventpilot/feature-dlq": "workspace:*",
     "@eventpilot/feature-outbox": "workspace:*",
+    "@eventpilot/gen-java": "workspace:*",
     "@eventpilot/gen-node": "workspace:*",
     "@eventpilot/plugin-api": "workspace:*",
     "commander": "^12.1.0",

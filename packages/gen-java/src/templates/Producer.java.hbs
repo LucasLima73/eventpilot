@@ -1,0 +1,40 @@
+package com.eventpilot.generated;
+
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.header.internals.RecordHeader;
+
+import java.util.Properties;
+import java.util.concurrent.ExecutionException;
+
+public class {{pascalCase service.name}}Producer implements AutoCloseable {
+  private final Producer<String, String> producer;
+
+  public {{pascalCase service.name}}Producer(String brokers) {
+    Properties props = new Properties();
+    props.put("bootstrap.servers", brokers);
+    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    this.producer = new KafkaProducer<>(props);
+  }
+
+{{#each service.produces}}
+  public void publish{{pascalCase this}}(String payloadJson, String correlationId, String causationId)
+      throws ExecutionException, InterruptedException {
+    ProducerRecord<String, String> record = new ProducerRecord<>("{{this}}", payloadJson);
+    if (correlationId != null) {
+      record.headers().add(new RecordHeader("x-correlation-id", correlationId.getBytes()));
+    }
+    if (causationId != null) {
+      record.headers().add(new RecordHeader("x-causation-id", causationId.getBytes()));
+    }
+    producer.send(record).get();
+  }
+
+{{/each}}
+  @Override
+  public void close() {
+    producer.close();
+  }
+}
