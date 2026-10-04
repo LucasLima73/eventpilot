@@ -1,4 +1,4 @@
-import { loadConfig } from "@eventpilot/core";
+import { loadConfig } from "@pilotevent/core";
 
 import { resolveBroker } from "../brokers.js";
 import { ensureComposeFileExists, runDockerCompose } from "../docker-runner.js";

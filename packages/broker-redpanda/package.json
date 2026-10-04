@@ -1,8 +1,11 @@
 {
-  "name": "@eventpilot/broker-redpanda",
+  "name": "@pilotevent/broker-redpanda",
   "version": "0.0.1",
   "description": "Redpanda/Kafka broker adapter for EventPilot.",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,7 +26,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@eventpilot/plugin-api": "workspace:*",
+    "@pilotevent/plugin-api": "workspace:*",
     "kafkajs": "^2.2.4"
   },
   "devDependencies": {

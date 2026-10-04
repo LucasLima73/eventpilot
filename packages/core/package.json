@@ -1,8 +1,11 @@
 {
-  "name": "@eventpilot/core",
+  "name": "@pilotevent/core",
   "version": "0.0.1",
   "description": "eventpilot.yaml schema, loader and plugin registry.",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,7 +26,7 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@eventpilot/plugin-api": "workspace:*",
+    "@pilotevent/plugin-api": "workspace:*",
     "yaml": "^2.5.1",
     "zod": "^3.23.8"
   },

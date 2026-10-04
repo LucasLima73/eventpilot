@@ -16,8 +16,8 @@ pnpm test
 - Check which [roadmap phase](./CLAUDE.md#10-roadmap) your change belongs to; avoid
   building ahead of the current phase.
 - `core` never imports a broker adapter, language generator or feature module directly —
-  only through the plugin registry (`@eventpilot/plugin-api`).
-- Changes to `@eventpilot/plugin-api` are breaking changes for every plugin and need a
+  only through the plugin registry (`@pilotevent/plugin-api`).
+- Changes to `@pilotevent/plugin-api` are breaking changes for every plugin and need a
   major version bump via a changeset.
 - Every plugin needs tests; generators use snapshot-style assertions on generated file
   content; broker adapters that touch Docker/Testcontainers should say so in their README.

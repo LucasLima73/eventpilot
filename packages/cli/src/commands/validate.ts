@@ -1,4 +1,4 @@
-import { loadConfig } from "@eventpilot/core";
+import { loadConfig } from "@pilotevent/core";
 
 export async function validate(): Promise<void> {
   try {

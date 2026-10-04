@@ -1,4 +1,4 @@
-import type { BrokerAdapter, FeatureModule, LanguageGenerator } from "@eventpilot/plugin-api";
+import type { BrokerAdapter, FeatureModule, LanguageGenerator } from "@pilotevent/plugin-api";
 
 function notFound(kind: string, id: string, available: string[]): Error {
   const list = available.length > 0 ? available.join(", ") : "(none registered)";

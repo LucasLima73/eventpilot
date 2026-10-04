@@ -1,4 +1,4 @@
-import type { BrokerAdapter } from "@eventpilot/plugin-api";
+import type { BrokerAdapter } from "@pilotevent/plugin-api";
 
 export interface TopicToProvision {
   name: string;

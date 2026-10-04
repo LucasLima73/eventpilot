@@ -1,4 +1,4 @@
-import { OUTBOX_MIGRATION_SQL } from "@eventpilot/feature-outbox";
+import { OUTBOX_MIGRATION_SQL } from "@pilotevent/feature-outbox";
 import { Client } from "pg";
 
 import { OUTBOX_CONNECTION_STRING } from "./postgres-compose.js";

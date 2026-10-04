@@ -1,6 +1,6 @@
 import { writeFile } from "node:fs/promises";
 
-import { loadConfig } from "@eventpilot/core";
+import { loadConfig } from "@pilotevent/core";
 
 import { resolveBroker } from "./brokers.js";
 import { mergeFragments, renderCompose } from "./compose-writer.js";

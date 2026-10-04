@@ -1,4 +1,4 @@
-# @eventpilot/core
+# @pilotevent/core
 
 Source of truth parsing for `eventpilot.yaml`, plus the plugin registry that resolves
 broker adapters, language generators and feature modules by id.

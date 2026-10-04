@@ -202,15 +202,6 @@ importers:
 
   apps/control-plane-api:
     dependencies:
-      '@eventpilot/broker-redpanda':
-        specifier: workspace:*
-        version: link:../../packages/broker-redpanda
-      '@eventpilot/core':
-        specifier: workspace:*
-        version: link:../../packages/core
-      '@eventpilot/plugin-api':
-        specifier: workspace:*
-        version: link:../../packages/plugin-api
       '@fastify/cors':
         specifier: ^9.0.1
         version: 9.0.1
@@ -220,6 +211,15 @@ importers:
       '@fastify/websocket':
         specifier: ^10.0.1
         version: 10.0.1
+      '@pilotevent/broker-redpanda':
+        specifier: workspace:*
+        version: link:../../packages/broker-redpanda
+      '@pilotevent/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@pilotevent/plugin-api':
+        specifier: workspace:*
+        version: link:../../packages/plugin-api
       fastify:
         specifier: ^4.28.1
         version: 4.29.1
@@ -279,7 +279,7 @@ importers:
 
   packages/broker-redpanda:
     dependencies:
-      '@eventpilot/plugin-api':
+      '@pilotevent/plugin-api':
         specifier: workspace:*
         version: link:../plugin-api
       kafkajs:
@@ -301,25 +301,25 @@ importers:
       '@clack/prompts':
         specifier: ^0.7.0
         version: 0.7.0
-      '@eventpilot/broker-redpanda':
+      '@pilotevent/broker-redpanda':
         specifier: workspace:*
         version: link:../broker-redpanda
-      '@eventpilot/core':
+      '@pilotevent/core':
         specifier: workspace:*
         version: link:../core
-      '@eventpilot/feature-dlq':
+      '@pilotevent/feature-dlq':
         specifier: workspace:*
         version: link:../feature-dlq
-      '@eventpilot/feature-outbox':
+      '@pilotevent/feature-outbox':
         specifier: workspace:*
         version: link:../feature-outbox
-      '@eventpilot/gen-java':
+      '@pilotevent/gen-java':
         specifier: workspace:*
         version: link:../gen-java
-      '@eventpilot/gen-node':
+      '@pilotevent/gen-node':
         specifier: workspace:*
         version: link:../gen-node
-      '@eventpilot/plugin-api':
+      '@pilotevent/plugin-api':
         specifier: workspace:*
         version: link:../plugin-api
       commander:
@@ -347,7 +347,7 @@ importers:
 
   packages/core:
     dependencies:
-      '@eventpilot/plugin-api':
+      '@pilotevent/plugin-api':
         specifier: workspace:*
         version: link:../plugin-api
       yaml:
@@ -369,7 +369,7 @@ importers:
 
   packages/feature-dlq:
     dependencies:
-      '@eventpilot/plugin-api':
+      '@pilotevent/plugin-api':
         specifier: workspace:*
         version: link:../plugin-api
       handlebars:
@@ -391,7 +391,7 @@ importers:
 
   packages/feature-outbox:
     dependencies:
-      '@eventpilot/plugin-api':
+      '@pilotevent/plugin-api':
         specifier: workspace:*
         version: link:../plugin-api
       handlebars:
@@ -413,7 +413,7 @@ importers:
 
   packages/gen-java:
     dependencies:
-      '@eventpilot/plugin-api':
+      '@pilotevent/plugin-api':
         specifier: workspace:*
         version: link:../plugin-api
       handlebars:
@@ -432,7 +432,7 @@ importers:
 
   packages/gen-node:
     dependencies:
-      '@eventpilot/plugin-api':
+      '@pilotevent/plugin-api':
         specifier: workspace:*
         version: link:../plugin-api
       handlebars:

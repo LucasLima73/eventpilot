@@ -36,15 +36,15 @@ The control plane and dashboard aren't wired into `eventpilot dashboard` yet (th
 packaging step is still open), but both already work:
 
 ```bash
-pnpm --filter @eventpilot/dashboard build
+pnpm --filter @pilotevent/dashboard build
 node apps/control-plane-api/dist/bin.js --project <path-to-your-project> --port 4000
 ```
 
 Then open `http://localhost:4000`. Your project needs an `eventpilot.yaml` (from
 `eventpilot init`) and a running broker (`eventpilot up`). For frontend development with
-hot reload instead, run `pnpm --filter @eventpilot/dashboard dev` (served at
+hot reload instead, run `pnpm --filter @pilotevent/dashboard dev` (served at
 `http://localhost:5173`, proxying `/api` and `/ws` to the control plane on port 4000)
-alongside `pnpm --filter @eventpilot/control-plane-api dev -- --project <path>`.
+alongside `pnpm --filter @pilotevent/control-plane-api dev -- --project <path>`.
 
 ## What it generates
 

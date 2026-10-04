@@ -1,4 +1,4 @@
-import type { BrokerConfig, ComposeFragment } from "@eventpilot/plugin-api";
+import type { BrokerConfig, ComposeFragment } from "@pilotevent/plugin-api";
 
 const CONSOLE_VERSION = "v2.7.2";
 

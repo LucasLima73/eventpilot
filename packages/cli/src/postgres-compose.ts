@@ -1,4 +1,4 @@
-import type { ComposeFragment } from "@eventpilot/plugin-api";
+import type { ComposeFragment } from "@pilotevent/plugin-api";
 
 /** Postgres, used as the outbox store. Not broker-specific, so it isn't part of any BrokerAdapter. */
 export function postgresCompose(): ComposeFragment {

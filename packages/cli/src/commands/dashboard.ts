@@ -5,7 +5,7 @@ export async function dashboard(): Promise<void> {
       "aren't wired into this CLI command yet — that packaging step is still open.",
       "",
       "For now, from the eventpilot monorepo:",
-      "  pnpm --filter @eventpilot/dashboard build",
+      "  pnpm --filter @pilotevent/dashboard build",
       "  node apps/control-plane-api/dist/bin.js --project <path-to-your-project> --port 4000",
       "Then open http://localhost:4000",
       "",

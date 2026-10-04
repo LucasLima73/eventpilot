@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { writeFile } from "node:fs/promises";
 
 import * as p from "@clack/prompts";
-import { parseConfig } from "@eventpilot/core";
+import { parseConfig } from "@pilotevent/core";
 import { stringify } from "yaml";
 
 import { resolveBroker } from "../brokers.js";

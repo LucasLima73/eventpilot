@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { GenerateContext, GeneratedFile, LanguageGenerator } from "@eventpilot/plugin-api";
+import type { GenerateContext, GeneratedFile, LanguageGenerator } from "@pilotevent/plugin-api";
 
 import { Handlebars, pascalCase } from "./handlebars-helpers.js";
 

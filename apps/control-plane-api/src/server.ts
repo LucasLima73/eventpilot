@@ -3,7 +3,7 @@ import path from "node:path";
 import cors from "@fastify/cors";
 import fastifyStatic from "@fastify/static";
 import websocket from "@fastify/websocket";
-import { loadConfig } from "@eventpilot/core";
+import { loadConfig } from "@pilotevent/core";
 import Fastify, { type FastifyInstance } from "fastify";
 
 import { LiveTail } from "./live-tail.js";

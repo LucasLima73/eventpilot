@@ -1,4 +1,4 @@
-# @eventpilot/control-plane-api
+# @pilotevent/control-plane-api
 
 Fastify server that backs the dashboard: serves the parsed `eventpilot.yaml`, live
 topic metadata from the broker, and a WebSocket feed of events as they happen.
@@ -6,13 +6,13 @@ topic metadata from the broker, and a WebSocket feed of events as they happen.
 Routes:
 
 - `GET /api/config` — parsed `eventpilot.yaml` from `--project` (default: cwd).
-- `GET /api/topics` — live topic list from the broker (via `@eventpilot/broker-redpanda`).
+- `GET /api/topics` — live topic list from the broker (via `@pilotevent/broker-redpanda`).
 - `GET /ws/events` — WebSocket; streams each event as JSON as it's produced.
 
 ## Running
 
 ```bash
-pnpm --filter @eventpilot/control-plane-api dev -- --project /path/to/your/project --port 4000
+pnpm --filter @pilotevent/control-plane-api dev -- --project /path/to/your/project --port 4000
 ```
 
 `--project` must point at a directory with an `eventpilot.yaml` (created by `eventpilot init`),

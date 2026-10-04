@@ -1,6 +1,6 @@
-import { dlqFeature } from "@eventpilot/feature-dlq";
-import { outboxFeature } from "@eventpilot/feature-outbox";
-import type { FeatureModule } from "@eventpilot/plugin-api";
+import { dlqFeature } from "@pilotevent/feature-dlq";
+import { outboxFeature } from "@pilotevent/feature-outbox";
+import type { FeatureModule } from "@pilotevent/plugin-api";
 
 const features = new Map<string, FeatureModule>([
   [dlqFeature.id, dlqFeature],

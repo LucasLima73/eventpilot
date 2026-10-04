@@ -1,6 +1,6 @@
 import { writeFile } from "node:fs/promises";
 
-import { loadConfig } from "@eventpilot/core";
+import { loadConfig } from "@pilotevent/core";
 import { stringify } from "yaml";
 
 import { implementedFeatures } from "../features.js";

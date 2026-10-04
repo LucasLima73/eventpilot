@@ -1,7 +1,7 @@
 import { mkdir, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-import type { GeneratedFile } from "@eventpilot/plugin-api";
+import type { GeneratedFile } from "@pilotevent/plugin-api";
 
 async function exists(filePath: string): Promise<boolean> {
   try {

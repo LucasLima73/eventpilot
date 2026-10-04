@@ -1,6 +1,6 @@
 import path from "node:path";
 
-import { loadConfig } from "@eventpilot/core";
+import { loadConfig } from "@pilotevent/core";
 import type { FastifyInstance } from "fastify";
 
 export function registerConfigRoute(app: FastifyInstance, projectDir: string): void {

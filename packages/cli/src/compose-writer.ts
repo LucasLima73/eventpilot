@@ -1,4 +1,4 @@
-import type { ComposeFragment } from "@eventpilot/plugin-api";
+import type { ComposeFragment } from "@pilotevent/plugin-api";
 import { stringify } from "yaml";
 
 export function mergeFragments(...fragments: ComposeFragment[]): ComposeFragment {

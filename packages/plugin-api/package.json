@@ -1,8 +1,11 @@
 {
-  "name": "@eventpilot/plugin-api",
+  "name": "@pilotevent/plugin-api",
   "version": "0.0.1",
   "description": "Public plugin contracts for EventPilot (broker adapters, language generators, feature modules).",
   "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

@@ -1,5 +1,5 @@
-import { createRedpandaAdapter } from "@eventpilot/broker-redpanda";
-import type { BrokerAdapter } from "@eventpilot/plugin-api";
+import { createRedpandaAdapter } from "@pilotevent/broker-redpanda";
+import type { BrokerAdapter } from "@pilotevent/plugin-api";
 
 export function resolveBroker(type: string): BrokerAdapter {
   if (type !== "redpanda") {

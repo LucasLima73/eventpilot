@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { FeatureContext, FeatureModule, GeneratedFile } from "@eventpilot/plugin-api";
+import type { FeatureContext, FeatureModule, GeneratedFile } from "@pilotevent/plugin-api";
 import Handlebars from "handlebars";
 import { z } from "zod";
 

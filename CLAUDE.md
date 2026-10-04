@@ -229,12 +229,12 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 
 **Fase 2 — Recursos**
 
-- [x] DLQ/retry (`@eventpilot/feature-dlq`, só node-ts por ora)
-- [x] Outbox (`@eventpilot/feature-outbox`, só node-ts por ora): tabela Postgres + `writeOutbox`/`startOutboxRelay` gerados; `eventpilot up` cria o container Postgres e aplica a migration automaticamente
+- [x] DLQ/retry (`@pilotevent/feature-dlq`, só node-ts por ora)
+- [x] Outbox (`@pilotevent/feature-outbox`, só node-ts por ora): tabela Postgres + `writeOutbox`/`startOutboxRelay` gerados; `eventpilot up` cria o container Postgres e aplica a migration automaticamente
 - [x] `add <feature>` (implementado para `dlq` e `outbox`; metrics/replay ainda recusam com mensagem clara)
 - [x] Tópicos declarados no YAML agora são provisionados de verdade no broker (`eventpilot up`/`generate`), incluindo `<topic>.dlq`
 - [ ] `validate` com AsyncAPI (hoje só valida a forma do YAML, não o schema dos contratos)
-- [x] Gerador Java (`@eventpilot/gen-java`, projeto Gradle, producer/consumer com `kafka-clients`; sem DLQ/Outbox ainda — essas features só suportam node-ts)
+- [x] Gerador Java (`@pilotevent/gen-java`, projeto Gradle, producer/consumer com `kafka-clients`; sem DLQ/Outbox ainda — essas features só suportam node-ts)
 
 **Fase 3 — Observabilidade**
 
@@ -266,7 +266,7 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 1. **Licença:** Apache-2.0. Adoção máxima; permite terceiros revenderem hospedado, mas simplifica contribuição externa enquanto não há camada paga. Pode migrar para BSL/Sustainable Use mais perto do primeiro release público pago.
 2. **Painel:** React + Vite. Mais simples, compatível com "começar pequeno"; ainda não implementado (Fase 3).
 3. **Métricas:** TimescaleDB (já refletido na seção 5).
-4. **Distribuição do CLI:** só `npx`/`npm` por enquanto (pacote `eventpilot`, scope `@eventpilot/*` livres no npm). Binário único (Go/pkg) fica para quando houver tração.
+4. **Distribuição do CLI:** só `npx`/`npm` por enquanto (pacote `eventpilot`, scope `@pilotevent/*` livres no npm). Binário único (Go/pkg) fica para quando houver tração.
 
 ## 13. Como o Claude deve trabalhar neste repo
 

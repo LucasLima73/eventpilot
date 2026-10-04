@@ -1,4 +1,4 @@
-# @eventpilot/plugin-api
+# @pilotevent/plugin-api
 
 Public contracts for EventPilot plugins: `BrokerAdapter`, `LanguageGenerator`, `FeatureModule`.
 

@@ -8,7 +8,7 @@ import type {
   TopicConfig,
   TopicInfo,
   TopicMetrics,
-} from "@eventpilot/plugin-api";
+} from "@pilotevent/plugin-api";
 
 import { composeService } from "./compose.js";
 import { retentionToMs } from "./retention.js";

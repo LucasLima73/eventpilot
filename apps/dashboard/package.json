@@ -1,5 +1,5 @@
 {
-  "name": "@eventpilot/dashboard",
+  "name": "@pilotevent/dashboard",
   "version": "0.0.1",
   "description": "EventPilot local dashboard: topics, service graph, live event feed.",
   "license": "Apache-2.0",

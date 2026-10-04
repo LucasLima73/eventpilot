@@ -1,6 +1,6 @@
-import { javaGenerator } from "@eventpilot/gen-java";
-import { nodeTsGenerator } from "@eventpilot/gen-node";
-import type { LanguageGenerator } from "@eventpilot/plugin-api";
+import { javaGenerator } from "@pilotevent/gen-java";
+import { nodeTsGenerator } from "@pilotevent/gen-node";
+import type { LanguageGenerator } from "@pilotevent/plugin-api";
 
 const generators = new Map<string, LanguageGenerator>([
   [nodeTsGenerator.id, nodeTsGenerator],
