@@ -34,5 +34,26 @@ describe("nodeTsGenerator", () => {
 
     const packageJson = files.find((f) => f.path.endsWith("package.json"))!;
     expect(JSON.parse(packageJson.content).name).toBe("orders-platform-order-service");
+
+    expect(consumer.content).not.toContain("withDlq");
+  });
+
+  it("wires the consumer into withDlq when the dlq feature is enabled", async () => {
+    const files = await nodeTsGenerator.generate({
+      projectName: "orders-platform",
+      service: {
+        name: "order-service",
+        language: "node-ts",
+        produces: [],
+        consumes: ["payment.confirmed"],
+      },
+      topics: [],
+      outputDir: "services",
+      features: { dlq: { maxRetries: 5, backoff: "exponential" } },
+    });
+
+    const consumer = files.find((f) => f.path.endsWith("consumer.ts"))!;
+    expect(consumer.content).toContain('import { withDlq } from "./dlq.js"');
+    expect(consumer.content).toContain("withDlq(topic, dlqProducer");
   });
 });

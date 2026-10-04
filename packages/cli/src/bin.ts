@@ -45,6 +45,7 @@ program.command("dashboard").description("Open the local dashboard").action(dash
 program
   .command("add <feature>")
   .description("Add a feature (dlq, outbox, metrics, replay) to an existing project")
+  .option("--force", "overwrite manually edited generated files")
   .action(add);
 
 await program.parseAsync(process.argv);

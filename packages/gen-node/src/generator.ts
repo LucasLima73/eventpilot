@@ -21,7 +21,11 @@ export const nodeTsGenerator: LanguageGenerator = {
 
   async generate(ctx: GenerateContext): Promise<GeneratedFile[]> {
     const base = `${ctx.outputDir}/${ctx.service.name}`;
-    const data = { projectName: ctx.projectName, service: ctx.service };
+    const data = {
+      projectName: ctx.projectName,
+      service: ctx.service,
+      dlq: Boolean(ctx.features?.dlq),
+    };
 
     return [
       {

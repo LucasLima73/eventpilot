@@ -1,0 +1,61 @@
+import type { Producer } from "kafkajs";
+
+export interface DlqOptions {
+  maxRetries: number;
+  backoff: "fixed" | "exponential";
+}
+
+export const DEFAULT_DLQ_OPTIONS: DlqOptions = {
+  maxRetries: {{maxRetries}},
+  backoff: "{{backoff}}",
+};
+
+function delayMs(attempt: number, options: DlqOptions): number {
+  return options.backoff === "exponential" ? 2 ** attempt * 100 : 500;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+export interface RawMessage {
+  key: string | null;
+  value: Buffer | string | null;
+  headers?: Record<string, string>;
+}
+
+/**
+ * Retries `handler` up to `options.maxRetries` times with backoff. If every
+ * attempt fails, publishes the original message to `<topic>.dlq` instead of
+ * losing it or blocking the consumer forever.
+ */
+export function withDlq<T>(
+  topic: string,
+  producer: Producer,
+  handler: (payload: T) => Promise<void> | void,
+  options: DlqOptions = DEFAULT_DLQ_OPTIONS,
+) {
+  return async (payload: T, raw: RawMessage): Promise<void> => {
+    let lastError: unknown;
+    for (let attempt = 0; attempt <= options.maxRetries; attempt += 1) {
+      try {
+        await handler(payload);
+        return;
+      } catch (err) {
+        lastError = err;
+        if (attempt < options.maxRetries) await sleep(delayMs(attempt, options));
+      }
+    }
+
+    await producer.send({
+      topic: `${topic}.dlq`,
+      messages: [
+        {
+          key: raw.key ?? undefined,
+          value: raw.value ?? Buffer.alloc(0),
+          headers: { ...raw.headers, "x-dlq-error": String(lastError) },
+        },
+      ],
+    });
+  };
+}

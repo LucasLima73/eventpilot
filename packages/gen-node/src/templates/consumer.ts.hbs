@@ -1,4 +1,7 @@
 import { Kafka, type EachMessagePayload } from "kafkajs";
+{{#if dlq}}
+import { withDlq } from "./dlq.js";
+{{/if}}
 
 export interface {{pascalCase service.name}}MessageHeaders {
   correlationId?: string;
@@ -18,27 +21,48 @@ export interface {{pascalCase service.name}}ConsumerOptions {
 export function create{{pascalCase service.name}}Consumer(options: {{pascalCase service.name}}ConsumerOptions) {
   const kafka = new Kafka({ clientId: "{{service.name}}", brokers: options.brokers });
   const consumer = kafka.consumer({ groupId: options.groupId ?? "{{service.name}}" });
+{{#if dlq}}
+  const dlqProducer = kafka.producer();
+{{/if}}
 
   const topics = [{{#each service.consumes}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}];
 
   return {
     async start(): Promise<void> {
       await consumer.connect();
+{{#if dlq}}
+      await dlqProducer.connect();
+{{/if}}
       for (const topic of topics) {
         await consumer.subscribe({ topic, fromBeginning: false });
       }
       await consumer.run({
         eachMessage: async ({ topic, message }: EachMessagePayload) => {
           const payload = message.value ? JSON.parse(message.value.toString()) : null;
-          await options.onMessage(topic, payload, {
+          const headers = {
             correlationId: message.headers?.["x-correlation-id"]?.toString(),
             causationId: message.headers?.["x-causation-id"]?.toString(),
+          };
+{{#if dlq}}
+          const guarded = withDlq(topic, dlqProducer, () => options.onMessage(topic, payload, headers));
+          await guarded(payload, {
+            key: message.key?.toString() ?? null,
+            value: message.value,
+            headers: Object.fromEntries(
+              Object.entries(message.headers ?? {}).map(([k, v]) => [k, v?.toString() ?? ""]),
+            ),
           });
+{{else}}
+          await options.onMessage(topic, payload, headers);
+{{/if}}
         },
       });
     },
     async stop(): Promise<void> {
       await consumer.disconnect();
+{{#if dlq}}
+      await dlqProducer.disconnect();
+{{/if}}
     },
   };
 }

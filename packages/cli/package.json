@@ -21,6 +21,7 @@
     "@clack/prompts": "^0.7.0",
     "@eventpilot/broker-redpanda": "workspace:*",
     "@eventpilot/core": "workspace:*",
+    "@eventpilot/feature-dlq": "workspace:*",
     "@eventpilot/gen-node": "workspace:*",
     "@eventpilot/plugin-api": "workspace:*",
     "commander": "^12.1.0",
