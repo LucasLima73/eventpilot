@@ -1,0 +1,35 @@
+import { Kafka, type Producer } from "kafkajs";
+
+export interface {{pascalCase service.name}}ProducerOptions {
+  brokers: string[];
+}
+
+export function create{{pascalCase service.name}}Producer(options: {{pascalCase service.name}}ProducerOptions) {
+  const kafka = new Kafka({ clientId: "{{service.name}}", brokers: options.brokers });
+  const producer: Producer = kafka.producer();
+
+  return {
+    async connect(): Promise<void> {
+      await producer.connect();
+    },
+    async disconnect(): Promise<void> {
+      await producer.disconnect();
+    },
+{{#each service.produces}}
+    async publish{{pascalCase this}}(payload: unknown, correlationId?: string, causationId?: string): Promise<void> {
+      await producer.send({
+        topic: "{{this}}",
+        messages: [
+          {
+            value: JSON.stringify(payload),
+            headers: {
+              ...(correlationId ? { "x-correlation-id": correlationId } : {}),
+              ...(causationId ? { "x-causation-id": causationId } : {}),
+            },
+          },
+        ],
+      });
+    },
+{{/each}}
+  };
+}

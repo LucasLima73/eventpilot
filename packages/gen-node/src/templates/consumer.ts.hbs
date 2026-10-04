@@ -1,0 +1,44 @@
+import { Kafka, type EachMessagePayload } from "kafkajs";
+
+export interface {{pascalCase service.name}}MessageHeaders {
+  correlationId?: string;
+  causationId?: string;
+}
+
+export interface {{pascalCase service.name}}ConsumerOptions {
+  brokers: string[];
+  groupId?: string;
+  onMessage: (
+    topic: string,
+    payload: unknown,
+    headers: {{pascalCase service.name}}MessageHeaders,
+  ) => Promise<void> | void;
+}
+
+export function create{{pascalCase service.name}}Consumer(options: {{pascalCase service.name}}ConsumerOptions) {
+  const kafka = new Kafka({ clientId: "{{service.name}}", brokers: options.brokers });
+  const consumer = kafka.consumer({ groupId: options.groupId ?? "{{service.name}}" });
+
+  const topics = [{{#each service.consumes}}"{{this}}"{{#unless @last}}, {{/unless}}{{/each}}];
+
+  return {
+    async start(): Promise<void> {
+      await consumer.connect();
+      for (const topic of topics) {
+        await consumer.subscribe({ topic, fromBeginning: false });
+      }
+      await consumer.run({
+        eachMessage: async ({ topic, message }: EachMessagePayload) => {
+          const payload = message.value ? JSON.parse(message.value.toString()) : null;
+          await options.onMessage(topic, payload, {
+            correlationId: message.headers?.["x-correlation-id"]?.toString(),
+            causationId: message.headers?.["x-causation-id"]?.toString(),
+          });
+        },
+      });
+    },
+    async stop(): Promise<void> {
+      await consumer.disconnect();
+    },
+  };
+}

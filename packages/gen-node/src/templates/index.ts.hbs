@@ -1,0 +1,26 @@
+import { create{{pascalCase service.name}}Producer } from "./producer.js";
+import { create{{pascalCase service.name}}Consumer } from "./consumer.js";
+
+const brokers = (process.env.EVENTPILOT_BROKERS ?? "localhost:9092").split(",");
+
+async function main(): Promise<void> {
+  const producer = create{{pascalCase service.name}}Producer({ brokers });
+  await producer.connect();
+
+  const consumer = create{{pascalCase service.name}}Consumer({
+    brokers,
+    onMessage: async (topic, payload, headers) => {
+      console.log(`[{{service.name}}] received on ${topic}`, payload, headers);
+    },
+  });
+  await consumer.start();
+
+  console.log(
+    "{{service.name}} is running. produces=[{{#each service.produces}}{{this}}{{#unless @last}},{{/unless}}{{/each}}] consumes=[{{#each service.consumes}}{{this}}{{#unless @last}},{{/unless}}{{/each}}]",
+  );
+}
+
+main().catch((err) => {
+  console.error(err);
+  process.exit(1);
+});
