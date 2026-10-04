@@ -16,8 +16,11 @@ export interface LiveEvent {
  * agent/SDK is meant to report traces to the control plane) — that pipeline
  * isn't built yet, so this reads the wire directly instead.
  */
+const HISTORY_LIMIT = 50;
+
 export class LiveTail {
   private readonly listeners = new Set<(event: LiveEvent) => void>();
+  private readonly history: LiveEvent[] = [];
   private startPromise: Promise<void> | null = null;
 
   constructor(
@@ -25,7 +28,9 @@ export class LiveTail {
     private readonly topics: string[],
   ) {}
 
+  /** Registers a listener, immediately replaying recent events so a reconnect isn't blank. */
   subscribe(listener: (event: LiveEvent) => void): () => void {
+    for (const event of this.history) listener(event);
     this.listeners.add(listener);
     this.startPromise ??= this.start();
     return () => this.listeners.delete(listener);
@@ -57,6 +62,8 @@ export class LiveTail {
           causationId: message.headers?.["x-causation-id"]?.toString() ?? null,
           timestamp: new Date(Number(message.timestamp)).toISOString(),
         };
+        this.history.push(event);
+        if (this.history.length > HISTORY_LIMIT) this.history.shift();
         for (const listener of this.listeners) listener(event);
       },
     });
