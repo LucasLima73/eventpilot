@@ -1,0 +1,35 @@
+{
+  "name": "@eventpilot/control-plane-api",
+  "version": "0.0.1",
+  "description": "EventPilot control plane: serves eventpilot.yaml config, live topic metadata and a WebSocket event feed to the dashboard.",
+  "license": "Apache-2.0",
+  "private": true,
+  "type": "module",
+  "bin": {
+    "eventpilot-control-plane": "./dist/bin.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json && chmod +x dist/bin.js",
+    "dev": "tsx watch src/bin.ts",
+    "start": "node dist/bin.js",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@eventpilot/broker-redpanda": "workspace:*",
+    "@eventpilot/core": "workspace:*",
+    "@eventpilot/plugin-api": "workspace:*",
+    "@fastify/cors": "^9.0.1",
+    "@fastify/static": "^7.0.4",
+    "@fastify/websocket": "^10.0.1",
+    "fastify": "^4.28.1",
+    "kafkajs": "^2.2.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  }
+}

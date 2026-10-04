@@ -235,9 +235,12 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 
 **Fase 3 — Observabilidade**
 
-- [ ] Control plane API + SDK Node/Java (traces com `correlation_id`)
-- [ ] Painel: tópicos, métricas, grafo ao vivo
+- [x] Control plane API (`apps/control-plane-api`): `/api/config`, `/api/topics` (live do broker), `/ws/events`
+- [x] Painel (`apps/dashboard`, React+Vite+Tailwind+React Flow): tópicos, grafo estático produtor→tópico→consumidor, feed de eventos ao vivo
+- [ ] SDK Node/Java que propaga `correlation_id`/`causation_id` e reporta traces ao control plane — **ainda não existe**: o feed ao vivo hoje funciona porque o control plane lê o broker diretamente (`LiveTail`, ver `apps/control-plane-api/README.md`), não porque o SDK empurra telemetria como a arquitetura da seção 4 descreve
+- [ ] Métricas (throughput, lag, erros, DLQ) — depende do pipeline de telemetria acima + TimescaleDB; `getMetrics` do broker ainda lança erro explícito
 - [ ] Replay simples
+- [ ] `eventpilot dashboard` ainda não inicia o control plane/painel automaticamente (ver instruções manuais que o comando imprime); falta empacotar isso no CLI
 
 **Fase 4 — Open-core**
 

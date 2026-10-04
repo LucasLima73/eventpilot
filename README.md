@@ -9,9 +9,10 @@ flow live, and track metrics.
 
 ## Status
 
-Early-stage, pre-release. Phase 0 (monorepo foundation) and the core of Phase 1
-(CLI + Redpanda compose generation + Node/TS generator) are implemented. See
-[`CLAUDE.md`, section 10](./CLAUDE.md#10-roadmap) for what's next.
+Early-stage, pre-release. Phase 0 (monorepo foundation), the core of Phase 1
+(CLI + Redpanda compose generation + Node/TS generator) and a first slice of Phase 3
+(control plane + dashboard, reading the broker directly rather than via a real SDK yet)
+are implemented. See [`CLAUDE.md`, section 10](./CLAUDE.md#10-roadmap) for what's next.
 
 ## Quickstart
 
@@ -28,6 +29,22 @@ node packages/cli/dist/bin.js down     # stops the local infra
 ```
 
 Once published, the same commands run as `npx eventpilot <command>`.
+
+## Dashboard
+
+The control plane and dashboard aren't wired into `eventpilot dashboard` yet (that
+packaging step is still open), but both already work:
+
+```bash
+pnpm --filter @eventpilot/dashboard build
+node apps/control-plane-api/dist/bin.js --project <path-to-your-project> --port 4000
+```
+
+Then open `http://localhost:4000`. Your project needs an `eventpilot.yaml` (from
+`eventpilot init`) and a running broker (`eventpilot up`). For frontend development with
+hot reload instead, run `pnpm --filter @eventpilot/dashboard dev` (served at
+`http://localhost:5173`, proxying `/api` and `/ws` to the control plane on port 4000)
+alongside `pnpm --filter @eventpilot/control-plane-api dev -- --project <path>`.
 
 ## What it generates
 
