@@ -22,7 +22,8 @@ pnpm test
 - Every plugin needs tests; generators use snapshot-style assertions on generated file
   content; broker adapters that touch Docker/Testcontainers should say so in their README.
 - Use [Conventional Commits](https://www.conventionalcommits.org/) (`feat:`, `fix:`,
-  `docs:`, `chore:`, ...).
+  `docs:`, `chore:`, ...). Enforced by a `commit-msg` hook (husky + commitlint) — commits
+  that don't follow the format are rejected locally.
 - Run `pnpm lint && pnpm test` before opening a PR. Keep PRs small and focused.
 - Record user-facing changes with `pnpm changeset`.
 
