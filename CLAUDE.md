@@ -230,9 +230,9 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 **Fase 2 — Recursos**
 
 - [x] DLQ/retry (`@eventpilot/feature-dlq`, só node-ts por ora)
-- [x] `add <feature>` (implementado para `dlq`; outbox/metrics/replay ainda recusam com mensagem clara)
+- [x] Outbox (`@eventpilot/feature-outbox`, só node-ts por ora): tabela Postgres + `writeOutbox`/`startOutboxRelay` gerados; `eventpilot up` cria o container Postgres e aplica a migration automaticamente
+- [x] `add <feature>` (implementado para `dlq` e `outbox`; metrics/replay ainda recusam com mensagem clara)
 - [x] Tópicos declarados no YAML agora são provisionados de verdade no broker (`eventpilot up`/`generate`), incluindo `<topic>.dlq`
-- [ ] Outbox
 - [ ] `validate` com AsyncAPI (hoje só valida a forma do YAML, não o schema dos contratos)
 - [ ] Gerador Java
 

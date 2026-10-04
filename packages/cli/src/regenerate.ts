@@ -3,14 +3,22 @@ import { writeFile } from "node:fs/promises";
 import { loadConfig } from "@eventpilot/core";
 
 import { resolveBroker } from "./brokers.js";
-import { renderCompose } from "./compose-writer.js";
+import { mergeFragments, renderCompose } from "./compose-writer.js";
 import { resolveFeature } from "./features.js";
 import { writeGeneratedFile } from "./fs-utils.js";
 import { resolveGenerator } from "./generators.js";
+import { postgresCompose } from "./postgres-compose.js";
 import { provisionTopics } from "./provision-topics.js";
 
 export interface RegenerateOptions {
   force?: boolean;
+}
+
+async function writeFiles(files: { path: string; content: string }[], force: boolean) {
+  for (const file of files) {
+    const result = await writeGeneratedFile(file, { force });
+    console.log(`${result === "written" ? "✔" : "·"} ${file.path} (${result})`);
+  }
 }
 
 /**
@@ -21,13 +29,16 @@ export interface RegenerateOptions {
  */
 export async function regenerateProject(options: RegenerateOptions): Promise<void> {
   const config = await loadConfig("eventpilot.yaml");
+  const force = Boolean(options.force);
 
   const broker = resolveBroker(config.broker.type);
-  await writeFile(
-    "docker-compose.yml",
-    renderCompose(broker.composeService(config.broker)),
-    "utf-8",
-  );
+  const dlqConfig = config.features.dlq ? config.features.dlq : undefined;
+  const outboxConfig = config.features.outbox ? config.features.outbox : undefined;
+
+  const composeFragment = outboxConfig
+    ? mergeFragments(broker.composeService(config.broker), postgresCompose())
+    : broker.composeService(config.broker);
+  await writeFile("docker-compose.yml", renderCompose(composeFragment), "utf-8");
   console.log("✔ docker-compose.yml regenerated");
 
   try {
@@ -40,8 +51,6 @@ export async function regenerateProject(options: RegenerateOptions): Promise<voi
     );
   }
 
-  const dlqConfig = config.features.dlq ? config.features.dlq : undefined;
-
   for (const service of config.services) {
     const generator = resolveGenerator(service.language);
     const files = await generator.generate({
@@ -49,27 +58,31 @@ export async function regenerateProject(options: RegenerateOptions): Promise<voi
       service,
       topics: config.topics,
       outputDir: "services",
-      features: dlqConfig ? { dlq: dlqConfig } : undefined,
+      features: {
+        ...(dlqConfig ? { dlq: dlqConfig } : {}),
+        ...(outboxConfig ? { outbox: true } : {}),
+      },
     });
-
-    for (const file of files) {
-      const result = await writeGeneratedFile(file, { force: Boolean(options.force) });
-      console.log(`${result === "written" ? "✔" : "·"} ${file.path} (${result})`);
-    }
+    await writeFiles(files, force);
   }
 
   if (dlqConfig) {
-    const feature = resolveFeature("dlq");
-    const files = await feature.apply({
+    const files = await resolveFeature("dlq").apply({
       projectName: config.project.name,
       services: config.services,
       config: dlqConfig,
       outputDir: "services",
     });
+    await writeFiles(files, force);
+  }
 
-    for (const file of files) {
-      const result = await writeGeneratedFile(file, { force: Boolean(options.force) });
-      console.log(`${result === "written" ? "✔" : "·"} ${file.path} (${result})`);
-    }
+  if (outboxConfig) {
+    const files = await resolveFeature("outbox").apply({
+      projectName: config.project.name,
+      services: config.services,
+      config: outboxConfig,
+      outputDir: "services",
+    });
+    await writeFiles(files, force);
   }
 }

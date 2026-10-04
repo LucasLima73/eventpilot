@@ -1,7 +1,11 @@
 import { dlqFeature } from "@eventpilot/feature-dlq";
+import { outboxFeature } from "@eventpilot/feature-outbox";
 import type { FeatureModule } from "@eventpilot/plugin-api";
 
-const features = new Map<string, FeatureModule>([[dlqFeature.id, dlqFeature]]);
+const features = new Map<string, FeatureModule>([
+  [dlqFeature.id, dlqFeature],
+  [outboxFeature.id, outboxFeature],
+]);
 
 export function resolveFeature(id: string): FeatureModule {
   const feature = features.get(id);

@@ -1,0 +1,35 @@
+{
+  "name": "@eventpilot/feature-outbox",
+  "version": "0.0.1",
+  "description": "Outbox feature module for EventPilot: generates a Postgres-backed outbox table + relay per producing service.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && mkdir -p dist/templates && cp src/templates/*.hbs dist/templates/",
+    "dev": "tsc -p tsconfig.json --watch",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@eventpilot/plugin-api": "workspace:*",
+    "handlebars": "^4.7.8",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.6.2",
+    "vitest": "^2.1.1"
+  }
+}

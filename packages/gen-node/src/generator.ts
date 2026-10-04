@@ -25,6 +25,7 @@ export const nodeTsGenerator: LanguageGenerator = {
       projectName: ctx.projectName,
       service: ctx.service,
       dlq: Boolean(ctx.features?.dlq),
+      outbox: Boolean(ctx.features?.outbox),
     };
 
     return [

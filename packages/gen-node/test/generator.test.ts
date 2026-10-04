@@ -56,4 +56,23 @@ describe("nodeTsGenerator", () => {
     expect(consumer.content).toContain('import { withDlq } from "./dlq.js"');
     expect(consumer.content).toContain("withDlq(topic, dlqProducer");
   });
+
+  it("adds pg to package.json when the outbox feature is enabled", async () => {
+    const files = await nodeTsGenerator.generate({
+      projectName: "orders-platform",
+      service: {
+        name: "order-service",
+        language: "node-ts",
+        produces: ["order.created"],
+        consumes: [],
+      },
+      topics: [],
+      outputDir: "services",
+      features: { outbox: true },
+    });
+
+    const packageJson = JSON.parse(files.find((f) => f.path.endsWith("package.json"))!.content);
+    expect(packageJson.dependencies.pg).toBeDefined();
+    expect(packageJson.devDependencies["@types/pg"]).toBeDefined();
+  });
 });

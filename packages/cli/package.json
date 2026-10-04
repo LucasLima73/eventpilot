@@ -22,13 +22,16 @@
     "@eventpilot/broker-redpanda": "workspace:*",
     "@eventpilot/core": "workspace:*",
     "@eventpilot/feature-dlq": "workspace:*",
+    "@eventpilot/feature-outbox": "workspace:*",
     "@eventpilot/gen-node": "workspace:*",
     "@eventpilot/plugin-api": "workspace:*",
     "commander": "^12.1.0",
+    "pg": "^8.13.0",
     "yaml": "^2.5.1"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
+    "@types/pg": "^8.11.10",
     "typescript": "^5.6.2",
     "vitest": "^2.1.1"
   }

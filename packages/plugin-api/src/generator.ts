@@ -26,6 +26,7 @@ export interface GenerateContext {
   /** Feature modules enabled for this project, so generators can wire hooks into their own code. */
   features?: {
     dlq?: DlqFeatureConfig;
+    outbox?: boolean;
   };
 }
 
