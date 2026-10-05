@@ -1,6 +1,6 @@
 {
   "name": "@pilotevent/control-plane-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "EventPilot control plane: serves eventpilot.yaml config, live topic metadata and a WebSocket event feed to the dashboard.",
   "license": "Apache-2.0",
   "publishConfig": {

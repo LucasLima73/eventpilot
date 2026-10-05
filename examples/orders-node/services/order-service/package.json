@@ -1,5 +1,5 @@
 {
-  "name": "{{projectName}}-{{service.name}}",
+  "name": "orders-platform-order-service",
   "version": "0.0.1",
   "private": true,
   "type": "module",
@@ -10,12 +10,12 @@
   },
   "dependencies": {
     "kafkajs": "^2.2.4",
-    "@pilotevent/sdk-node": "^0.0.2"{{#if outbox}},
-    "pg": "^8.13.0"{{/if}}
+    "@pilotevent/sdk-node": "^0.0.2",
+    "pg": "^8.13.0"
   },
   "devDependencies": {
     "tsx": "^4.19.1",
-    "typescript": "^5.6.2"{{#if outbox}},
-    "@types/pg": "^8.11.10"{{/if}}
+    "typescript": "^5.6.2",
+    "@types/pg": "^8.11.10"
   }
 }

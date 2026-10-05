@@ -1,6 +1,6 @@
 {
   "name": "@pilotevent/sdk-node",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Lightweight Node agent for EventPilot: propagates correlation_id/causation_id on kafkajs producers/consumers and reports traces to the control plane.",
   "license": "Apache-2.0",
   "publishConfig": {

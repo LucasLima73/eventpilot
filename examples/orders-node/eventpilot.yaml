@@ -1,0 +1,40 @@
+version: 1
+project:
+  name: orders-platform
+broker:
+  type: redpanda
+  version: latest
+contracts:
+  format: asyncapi
+  path: ./contracts
+services:
+  - name: order-service
+    language: node-ts
+    produces:
+      - order.created
+      - order.cancelled
+    consumes:
+      - payment.confirmed
+topics:
+  - name: order.created
+    partitions: 3
+    retention: 7d
+    dlq: true
+  - name: order.cancelled
+    partitions: 1
+    retention: 7d
+    dlq: false
+  - name: payment.confirmed
+    partitions: 1
+    retention: 7d
+    dlq: false
+features:
+  dashboard: true
+  metrics: true
+  replay: true
+  dlq:
+    maxRetries: 5
+    backoff: exponential
+  outbox:
+    enabled: true
+    store: postgres

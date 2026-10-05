@@ -1,6 +1,6 @@
 {
   "name": "@pilotevent/gen-node",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Node/TypeScript language generator for EventPilot (producer/consumer templates).",
   "license": "Apache-2.0",
   "publishConfig": {

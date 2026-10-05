@@ -1,0 +1,25 @@
+plugins {
+  id 'java'
+  id 'application'
+}
+
+group = 'com.eventpilot'
+version = '0.0.1'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  implementation 'org.apache.kafka:kafka-clients:3.8.0'
+  implementation 'org.postgresql:postgresql:42.7.4'
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_17
+  targetCompatibility = JavaVersion.VERSION_17
+}
+
+application {
+  mainClass = 'com.eventpilot.generated.PaymentServiceMain'
+}

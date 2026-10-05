@@ -7,13 +7,17 @@ base service code, and a dashboard to configure topics/schemas/consumers, watch 
 flow live, and track metrics.
 
 > Full project context, architecture and roadmap live in [`CLAUDE.md`](./CLAUDE.md).
+> New to the project? Start with [`docs/getting-started.md`](./docs/getting-started.md).
 
 ## Status
 
-Early-stage, pre-release. Phase 0 (monorepo foundation), the core of Phase 1
-(CLI + Redpanda compose generation + Node/TS generator) and a first slice of Phase 3
-(control plane + dashboard, reading the broker directly rather than via a real SDK yet)
-are implemented. See [`CLAUDE.md`, section 10](./CLAUDE.md#10-roadmap) for what's next.
+Early-stage, pre-release. Phases 0–3 of the roadmap are done: CLI (`init`/`up`/`generate`/
+`add`/`validate`/`replay`/`metrics`/`dashboard`), Redpanda adapter, Node and Java
+generators, DLQ and Outbox (both languages), real AsyncAPI/JSON Schema contract
+validation, and a control plane + dashboard fed by real SDKs (`@pilotevent/sdk-node` and
+a generated Java equivalent). See [`CLAUDE.md`, section 10](./CLAUDE.md#10-roadmap) for
+exactly what's open (mainly: persisted metrics history, a Java SDK published to Maven
+Central instead of generated inline, and SSO/hosted-anything — none planned yet).
 
 ## Quickstart
 

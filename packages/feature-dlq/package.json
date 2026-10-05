@@ -1,6 +1,6 @@
 {
   "name": "@pilotevent/feature-dlq",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "DLQ/retry feature module for EventPilot: generates a retry-with-backoff + dead-letter helper per service.",
   "license": "Apache-2.0",
   "publishConfig": {
