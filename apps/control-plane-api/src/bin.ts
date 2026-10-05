@@ -8,10 +8,10 @@ import { createServer } from "./server.js";
 
 const args = parseArgs(process.argv.slice(2));
 
-const builtDashboardDir = path.join(
-  path.dirname(fileURLToPath(import.meta.url)),
-  "../../dashboard/dist",
-);
+// dist/bin.js -> dist/public, bundled into this package's own build (not a
+// monorepo-relative path), so this also works when installed as a plain npm
+// dependency with no sibling apps/dashboard around.
+const builtDashboardDir = path.join(path.dirname(fileURLToPath(import.meta.url)), "public");
 
 const server = await createServer({
   projectDir: args.projectDir,
@@ -20,3 +20,4 @@ const server = await createServer({
 });
 
 await server.listen({ port: args.port, host: "0.0.0.0" });
+console.log(`\nDashboard: http://localhost:${args.port}\n`);

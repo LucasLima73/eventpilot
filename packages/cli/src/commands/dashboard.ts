@@ -1,15 +1,35 @@
-export async function dashboard(): Promise<void> {
-  console.log(
-    [
-      "The dashboard and control plane exist (apps/dashboard, apps/control-plane-api) but",
-      "aren't wired into this CLI command yet — that packaging step is still open.",
-      "",
-      "For now, from the eventpilot monorepo:",
-      "  pnpm --filter @pilotevent/dashboard build",
-      "  node apps/control-plane-api/dist/bin.js --project <path-to-your-project> --port 4000",
-      "Then open http://localhost:4000",
-      "",
-      "(Your project's eventpilot.yaml and broker from `eventpilot up` must already exist.)",
-    ].join("\n"),
-  );
+import { spawn } from "node:child_process";
+import { createRequire } from "node:module";
+import path from "node:path";
+
+export interface DashboardOptions {
+  port?: string;
+}
+
+export async function dashboard(options: DashboardOptions): Promise<void> {
+  const port = options.port ?? "4000";
+
+  const require = createRequire(import.meta.url);
+  let binPath: string;
+  try {
+    const pkgJsonPath = require.resolve("@pilotevent/control-plane-api/package.json");
+    binPath = path.join(path.dirname(pkgJsonPath), "dist", "bin.js");
+  } catch {
+    console.error(
+      "Could not find @pilotevent/control-plane-api — reinstall eventpilot (npm install -g eventpilot) and try again.",
+    );
+    process.exitCode = 1;
+    return;
+  }
+
+  await new Promise<void>((resolve, reject) => {
+    const child = spawn(process.execPath, [binPath, "--project", process.cwd(), "--port", port], {
+      stdio: "inherit",
+    });
+    child.on("exit", (code) => {
+      if (code === 0 || code === null) resolve();
+      else reject(new Error(`dashboard exited with code ${code}`));
+    });
+    child.on("error", reject);
+  });
 }

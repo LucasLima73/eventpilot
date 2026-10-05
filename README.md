@@ -28,23 +28,23 @@ node packages/cli/dist/bin.js generate # regenerate code after editing eventpilo
 node packages/cli/dist/bin.js down     # stops the local infra
 ```
 
-Once published, the same commands run as `npx eventpilot <command>`.
+Published on npm — the same commands run as `npx eventpilot <command>`.
 
 ## Dashboard
 
-The control plane and dashboard aren't wired into `eventpilot dashboard` yet (that
-packaging step is still open), but both already work:
-
 ```bash
-pnpm --filter @pilotevent/dashboard build
-node apps/control-plane-api/dist/bin.js --project <path-to-your-project> --port 4000
+eventpilot dashboard
 ```
 
-Then open `http://localhost:4000`. Your project needs an `eventpilot.yaml` (from
-`eventpilot init`) and a running broker (`eventpilot up`). For frontend development with
-hot reload instead, run `pnpm --filter @pilotevent/dashboard dev` (served at
-`http://localhost:5173`, proxying `/api` and `/ws` to the control plane on port 4000)
-alongside `pnpm --filter @pilotevent/control-plane-api dev -- --project <path>`.
+Starts the control plane (bundled with `eventpilot`) and opens the dashboard at
+`http://localhost:4000` for the project in your current directory. Needs an
+`eventpilot.yaml` (from `eventpilot init`) and a running broker (`eventpilot up`).
+Use `--port` to pick a different port.
+
+For dashboard frontend development with hot reload instead, from the monorepo: run
+`pnpm --filter @pilotevent/dashboard dev` (served at `http://localhost:5173`, proxying
+`/api` and `/ws` to the control plane on port 4000) alongside
+`pnpm --filter @pilotevent/control-plane-api dev -- --project <path>`.
 
 ## What it generates
 

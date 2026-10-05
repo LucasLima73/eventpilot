@@ -1,6 +1,6 @@
 {
   "name": "eventpilot",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "EventPilot CLI — scaffold and run an event-driven architecture in one command.",
   "license": "Apache-2.0",
   "type": "module",
@@ -20,6 +20,7 @@
   "dependencies": {
     "@clack/prompts": "^0.7.0",
     "@pilotevent/broker-redpanda": "workspace:*",
+    "@pilotevent/control-plane-api": "workspace:*",
     "@pilotevent/core": "workspace:*",
     "@pilotevent/feature-dlq": "workspace:*",
     "@pilotevent/feature-outbox": "workspace:*",

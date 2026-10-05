@@ -3,13 +3,18 @@
   "version": "0.0.1",
   "description": "EventPilot control plane: serves eventpilot.yaml config, live topic metadata and a WebSocket event feed to the dashboard.",
   "license": "Apache-2.0",
-  "private": true,
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "bin": {
     "eventpilot-control-plane": "./dist/bin.js"
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc -p tsconfig.json && chmod +x dist/bin.js",
+    "build": "pnpm --filter @pilotevent/dashboard build && tsc -p tsconfig.json && mkdir -p dist/public && cp -r ../dashboard/dist/. dist/public/ && chmod +x dist/bin.js",
     "dev": "tsx watch src/bin.ts",
     "start": "node dist/bin.js",
     "lint": "eslint src --ext .ts",

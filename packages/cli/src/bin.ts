@@ -15,7 +15,7 @@ const program = new Command();
 program
   .name("eventpilot")
   .description("Scaffold and run an event-driven architecture in one command.")
-  .version("0.0.1");
+  .version("0.0.2");
 
 program
   .command("init")
@@ -40,7 +40,11 @@ program.command("up").description("Start the local Docker infrastructure").actio
 
 program.command("down").description("Stop the local Docker infrastructure").action(down);
 
-program.command("dashboard").description("Open the local dashboard").action(dashboard);
+program
+  .command("dashboard")
+  .description("Start the local dashboard (control plane + web UI)")
+  .option("--port <port>", "port to run on", "4000")
+  .action(dashboard);
 
 program
   .command("add <feature>")

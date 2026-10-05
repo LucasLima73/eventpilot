@@ -304,6 +304,9 @@ importers:
       '@pilotevent/broker-redpanda':
         specifier: workspace:*
         version: link:../broker-redpanda
+      '@pilotevent/control-plane-api':
+        specifier: workspace:*
+        version: link:../../apps/control-plane-api
       '@pilotevent/core':
         specifier: workspace:*
         version: link:../core
