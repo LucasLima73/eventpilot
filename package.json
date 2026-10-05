@@ -23,6 +23,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "changeset": "changeset",
+    "release": "pnpm build && pnpm -r publish --access public --no-git-checks",
     "prepare": "husky"
   },
   "devDependencies": {

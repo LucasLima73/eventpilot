@@ -27,6 +27,22 @@ pnpm test
 - Run `pnpm lint && pnpm test` before opening a PR. Keep PRs small and focused.
 - Record user-facing changes with `pnpm changeset`.
 
+## Releasing
+
+Releases are automated with [Changesets](https://github.com/changesets/changesets) and
+GitHub Actions — publishing by hand (`npm publish`/`pnpm publish`) is no longer the
+normal path and should be avoided, since it skips the workspace-protocol resolution
+`pnpm -r publish` does for you.
+
+1. Every PR with a user-facing change includes a changeset (`pnpm changeset`), checked
+   in alongside the code.
+2. On merge to `master`, the [release workflow](./.github/workflows/release.yml) either
+   opens/updates a "chore: version packages" PR (bumping versions and changelogs from the
+   pending changesets) or, if that PR was just merged, publishes every changed package to
+   npm with `pnpm -r publish`.
+3. Requires an `NPM_TOKEN` repo secret — an npm **Automation** access token (bypasses
+   2FA for publish), added under Settings → Secrets and variables → Actions.
+
 ## Code style
 
 - TypeScript `strict: true`, ESM, no `any` without justification.
