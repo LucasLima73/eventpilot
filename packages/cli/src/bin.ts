@@ -15,7 +15,7 @@ const program = new Command();
 program
   .name("eventpilot")
   .description("Scaffold and run an event-driven architecture in one command.")
-  .version("0.0.2");
+  .version("0.0.3");
 
 program
   .command("init")
