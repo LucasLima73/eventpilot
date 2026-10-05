@@ -35,5 +35,14 @@
     "testcontainers": "^12.2.0",
     "typescript": "^5.6.2",
     "vitest": "^2.1.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LucasLima73/eventpilot.git",
+    "directory": "packages/broker-redpanda"
+  },
+  "homepage": "https://github.com/LucasLima73/eventpilot#readme",
+  "bugs": {
+    "url": "https://github.com/LucasLima73/eventpilot/issues"
   }
 }
