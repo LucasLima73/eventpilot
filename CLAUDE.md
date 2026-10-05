@@ -249,8 +249,9 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 
 **Fase 4 — Open-core**
 
-- [ ] Definir licença e limites open source vs. pago
-- [ ] Versão hospedada, SSO/RBAC, auditoria, retenção longa (pago)
+- [x] Licença: Apache-2.0 (seção 12)
+- [ ] Definir limites open source vs. pago (o que entra na camada paga ainda não foi decidido)
+- [ ] Versão hospedada, SSO/RBAC, auditoria, retenção longa (pago) — decisão de negócio, não implementar sem direção explícita do Lucas
 
 ## 11. Convenções
 
@@ -266,8 +267,8 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 ## 12. Decisões tomadas (sem checagem prévia, a pedido do Lucas em 2026-10-04 — revisitar se algo não fizer sentido)
 
 1. **Licença:** Apache-2.0. Adoção máxima; permite terceiros revenderem hospedado, mas simplifica contribuição externa enquanto não há camada paga. Pode migrar para BSL/Sustainable Use mais perto do primeiro release público pago.
-2. **Painel:** React + Vite. Mais simples, compatível com "começar pequeno"; ainda não implementado (Fase 3).
-3. **Métricas:** TimescaleDB (já refletido na seção 5).
+2. **Painel:** React + Vite. Implementado na Fase 3 (`apps/dashboard`).
+3. **Métricas:** decisão original era TimescaleDB; o que existe hoje (`eventpilot metrics`) é um snapshot sob demanda direto do broker, sem persistir série temporal — TimescaleDB continua de pé como a forma de guardar histórico quando isso for implementado.
 4. **Distribuição do CLI:** só `npx`/`npm` por enquanto (pacote `eventpilot`, scope `@pilotevent/*` livres no npm). Binário único (Go/pkg) fica para quando houver tração.
 
 ## 13. Como o Claude deve trabalhar neste repo
