@@ -37,3 +37,26 @@ jobs:
 
       - name: Format check
         run: pnpm format:check
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12.9.1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm build
+
+      - name: Redpanda integration tests (testcontainers)
+        run: pnpm --filter @pilotevent/broker-redpanda test:integration
