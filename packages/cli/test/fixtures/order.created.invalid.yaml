@@ -1,0 +1,6 @@
+asyncapi: 3.0.0
+info:
+  title: Order events
+channels:
+  order.created:
+    address: order.created

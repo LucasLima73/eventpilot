@@ -78,13 +78,7 @@ function activeIdsForEvent(event: LiveEvent, edges: Edge[]): string[] {
   return [topicId, ...touchingEdges];
 }
 
-export function EventGraph({
-  config,
-  events,
-}: {
-  config: EventPilotConfig;
-  events: LiveEvent[];
-}) {
+export function EventGraph({ config, events }: { config: EventPilotConfig; events: LiveEvent[] }) {
   const { nodes, edges } = useMemo(() => buildGraph(config), [config]);
   const [activeIds, setActiveIds] = useState<Set<string>>(new Set());
 
@@ -109,9 +103,7 @@ export function EventGraph({
   }, [events, edges]);
 
   const styledNodes = nodes.map((node) =>
-    activeIds.has(node.id)
-      ? { ...node, style: { ...node.style, ...HIGHLIGHT_NODE_STYLE } }
-      : node,
+    activeIds.has(node.id) ? { ...node, style: { ...node.style, ...HIGHLIGHT_NODE_STYLE } } : node,
   );
   const styledEdges = edges.map((edge) =>
     activeIds.has(edge.id) ? { ...edge, animated: true, style: HIGHLIGHT_EDGE_STYLE } : edge,

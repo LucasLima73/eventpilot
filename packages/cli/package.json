@@ -18,6 +18,7 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "@asyncapi/parser": "^3.6.3",
     "@clack/prompts": "^0.7.0",
     "@pilotevent/broker-redpanda": "workspace:*",
     "@pilotevent/control-plane-api": "workspace:*",
@@ -27,6 +28,7 @@
     "@pilotevent/gen-java": "workspace:*",
     "@pilotevent/gen-node": "workspace:*",
     "@pilotevent/plugin-api": "workspace:*",
+    "ajv": "^8.20.0",
     "commander": "^12.1.0",
     "pg": "^8.13.0",
     "yaml": "^2.5.1"

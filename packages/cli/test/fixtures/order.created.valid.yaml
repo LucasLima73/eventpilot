@@ -1,0 +1,22 @@
+asyncapi: 3.0.0
+info:
+  title: Order events
+  version: 1.0.0
+channels:
+  order.created:
+    address: order.created
+    messages:
+      OrderCreated:
+        payload:
+          type: object
+          properties:
+            orderId:
+              type: string
+            total:
+              type: number
+          required: [orderId, total]
+operations:
+  publishOrderCreated:
+    action: send
+    channel:
+      $ref: "#/channels/order.created"

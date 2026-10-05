@@ -233,7 +233,7 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 - [x] Outbox (`@pilotevent/feature-outbox`, só node-ts por ora): tabela Postgres + `writeOutbox`/`startOutboxRelay` gerados; `eventpilot up` cria o container Postgres e aplica a migration automaticamente
 - [x] `add <feature>` (implementado para `dlq` e `outbox`; metrics/replay ainda recusam com mensagem clara)
 - [x] Tópicos declarados no YAML agora são provisionados de verdade no broker (`eventpilot up`/`generate`), incluindo `<topic>.dlq`
-- [ ] `validate` com AsyncAPI (hoje só valida a forma do YAML, não o schema dos contratos)
+- [x] `validate` valida o schema real dos contratos (`@asyncapi/parser` para AsyncAPI, `ajv` para JSON Schema) para todo tópico com `schema:` declarado
 - [x] Gerador Java (`@pilotevent/gen-java`, projeto Gradle, producer/consumer com `kafka-clients`; sem DLQ/Outbox ainda — essas features só suportam node-ts)
 
 **Fase 3 — Observabilidade**

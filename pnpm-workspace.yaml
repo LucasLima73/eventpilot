@@ -3,4 +3,5 @@ packages:
   - "apps/*"
   - "examples/*"
 allowBuilds:
+  "@scarf/scarf": false
   esbuild: true

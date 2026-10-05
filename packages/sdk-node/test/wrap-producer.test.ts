@@ -13,10 +13,7 @@ function fakeProducer() {
 
 describe("wrapProducer", () => {
   beforeEach(() => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn().mockResolvedValue(new Response(null, { status: 202 })),
-    );
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response(null, { status: 202 })));
   });
 
   it("generates a correlation id when the caller didn't set one", async () => {
@@ -42,9 +39,7 @@ describe("wrapProducer", () => {
 
     await wrapped.send({
       topic: "order.created",
-      messages: [
-        { value: "{}", headers: { "x-correlation-id": "abc", "x-causation-id": "root" } },
-      ],
+      messages: [{ value: "{}", headers: { "x-correlation-id": "abc", "x-causation-id": "root" } }],
     });
 
     const sent = send.mock.calls[0][0];
@@ -68,7 +63,11 @@ describe("wrapProducer", () => {
       expect.objectContaining({ method: "POST" }),
     );
     const body = JSON.parse(fetchMock.mock.calls[0][1].body as string);
-    expect(body).toMatchObject({ service: "order-service", direction: "produce", topic: "order.created" });
+    expect(body).toMatchObject({
+      service: "order-service",
+      direction: "produce",
+      topic: "order.created",
+    });
   });
 
   it("still sends even if the control plane is unreachable", async () => {
