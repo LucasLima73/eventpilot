@@ -43,16 +43,33 @@ export function wrapConsumer(consumer: Consumer, options: WrapConsumerOptions): 
         ...config,
         eachMessage: eachMessage
           ? async (payload) => {
+              const correlationId =
+                headerValue(payload.message.headers?.["x-correlation-id"]) ?? null;
+              const causationId = headerValue(payload.message.headers?.["x-causation-id"]) ?? null;
+
               void reportTrace(options.controlPlaneUrl, {
                 service: options.service,
                 direction: "consume",
                 topic: payload.topic,
-                correlationId: headerValue(payload.message.headers?.["x-correlation-id"]) ?? null,
-                causationId: headerValue(payload.message.headers?.["x-causation-id"]) ?? null,
+                correlationId,
+                causationId,
                 timestamp: new Date().toISOString(),
               });
 
-              await eachMessage(payload);
+              try {
+                await eachMessage(payload);
+              } catch (err) {
+                void reportTrace(options.controlPlaneUrl, {
+                  service: options.service,
+                  direction: "error",
+                  topic: payload.topic,
+                  correlationId,
+                  causationId,
+                  timestamp: new Date().toISOString(),
+                  error: (err as Error).message ?? String(err),
+                });
+                throw err;
+              }
             }
           : undefined,
       });

@@ -5,11 +5,12 @@ import type { EventBus } from "../event-bus.js";
 
 const traceEventSchema = z.object({
   service: z.string().min(1),
-  direction: z.enum(["produce", "consume"]),
+  direction: z.enum(["produce", "consume", "error"]),
   topic: z.string().min(1),
   correlationId: z.string().nullable(),
   causationId: z.string().nullable(),
   timestamp: z.string(),
+  error: z.string().optional(),
 });
 
 /** Ingests trace events pushed by @pilotevent/sdk-node agents. */

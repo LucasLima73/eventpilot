@@ -21,7 +21,13 @@ export const javaGenerator: LanguageGenerator = {
 
   async generate(ctx: GenerateContext): Promise<GeneratedFile[]> {
     const base = `${ctx.outputDir}/${ctx.service.name}`;
-    const data = { projectName: ctx.projectName, service: ctx.service };
+    const dlq = ctx.features?.dlq;
+    const data = {
+      projectName: ctx.projectName,
+      service: ctx.service,
+      dlq: Boolean(dlq),
+      outbox: Boolean(ctx.features?.outbox),
+    };
     const javaDir = `${base}/src/main/java/com/eventpilot/generated`;
 
     return [
@@ -38,6 +44,10 @@ export const javaGenerator: LanguageGenerator = {
       {
         path: `${javaDir}/${pascalCase(ctx.service.name)}Main.java`,
         content: GENERATED_HEADER + compile("Main.java.hbs")(data),
+      },
+      {
+        path: `${javaDir}/EventPilotAgent.java`,
+        content: GENERATED_HEADER + compile("EventPilotAgent.java.hbs")(data),
       },
     ];
   },

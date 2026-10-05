@@ -6,8 +6,10 @@ export interface LiveEvent {
   causationId: string | null;
   /** Reporting service, when known via the SDK. null for broker-tail (no attribution). */
   service: string | null;
-  direction: "produce" | "consume" | "broker-tail";
+  direction: "produce" | "consume" | "broker-tail" | "error";
   timestamp: string;
+  /** Only set when direction is "error". */
+  error?: string;
 }
 
 const HISTORY_LIMIT = 50;
@@ -34,7 +36,8 @@ export class EventBus {
   }
 
   publish(event: LiveEvent): void {
-    if (event.direction !== "consume" && event.correlationId) {
+    const dedupable = event.direction === "produce" || event.direction === "broker-tail";
+    if (dedupable && event.correlationId) {
       const now = Date.now();
       this.pruneExpired(now);
 

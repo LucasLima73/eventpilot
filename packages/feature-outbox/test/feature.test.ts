@@ -33,14 +33,38 @@ describe("outboxFeature", () => {
     expect(files).toEqual([]);
   });
 
+  it("generates Outbox.java and OutboxRelay.java for a Java producer", async () => {
+    const files = await outboxFeature.apply({
+      projectName: "orders-platform",
+      services: [
+        {
+          name: "payment-service",
+          language: "java",
+          produces: ["payment.confirmed"],
+          consumes: [],
+        },
+      ],
+      config: { enabled: true, store: "postgres" },
+      outputDir: "services",
+    });
+
+    expect(files.map((f) => f.path)).toEqual([
+      "services/payment-service/src/main/java/com/eventpilot/generated/Outbox.java",
+      "services/payment-service/src/main/java/com/eventpilot/generated/OutboxRelay.java",
+    ]);
+    expect(files[0].content).toContain("public static void writeOutbox");
+    expect(files[0].content).toContain("CREATE TABLE IF NOT EXISTS outbox");
+    expect(files[1].content).toContain("class OutboxRelay");
+  });
+
   it("throws a clear error for an unsupported language", async () => {
     await expect(
       outboxFeature.apply({
         projectName: "orders-platform",
         services: [
           {
-            name: "payment-service",
-            language: "java",
+            name: "legacy-service",
+            language: "python",
             produces: ["payment.confirmed"],
             consumes: [],
           },
@@ -48,6 +72,6 @@ describe("outboxFeature", () => {
         config: {},
         outputDir: "services",
       }),
-    ).rejects.toThrow(/doesn't support: payment-service \(java\)/);
+    ).rejects.toThrow(/doesn't support: legacy-service \(python\)/);
   });
 });

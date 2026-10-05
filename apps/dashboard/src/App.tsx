@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchConfig, fetchTopics, type EventPilotConfig, type TopicInfo } from "./api.js";
 import { EventGraph } from "./components/EventGraph.js";
 import { LiveEvents } from "./components/LiveEvents.js";
+import { TopicInspector } from "./components/TopicInspector.js";
 import { TopicsTable } from "./components/TopicsTable.js";
 import { useLiveEvents } from "./hooks/useLiveEvents.js";
 
@@ -47,8 +48,9 @@ export function App() {
 
       {config && (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-          <div className="lg:col-span-2">
+          <div className="flex flex-col gap-4 lg:col-span-2">
             <EventGraph config={config} events={events} />
+            <TopicInspector topicNames={(topics ?? []).map((t) => t.name)} />
           </div>
           <div className="flex flex-col gap-4">
             <TopicsTable topics={topics} error={topicsError} />

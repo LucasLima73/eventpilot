@@ -54,7 +54,9 @@ describe("nodeTsGenerator", () => {
 
     const consumer = files.find((f) => f.path.endsWith("consumer.ts"))!;
     expect(consumer.content).toContain('import { withDlq } from "./dlq.js"');
-    expect(consumer.content).toContain("withDlq(topic, dlqProducer");
+    expect(consumer.content).toContain("withDlq(");
+    expect(consumer.content).toContain("dlqProducer,");
+    expect(consumer.content).toContain("agent.reportError(topic,");
   });
 
   it("adds pg to package.json when the outbox feature is enabled", async () => {

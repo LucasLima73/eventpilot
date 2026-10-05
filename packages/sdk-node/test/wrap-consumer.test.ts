@@ -90,3 +90,35 @@ describe("wrapConsumer", () => {
     expect(body).toMatchObject({ correlationId: null, causationId: null });
   });
 });
+
+describe("wrapConsumer error reporting", () => {
+  it("reports an error trace and rethrows when the handler fails", async () => {
+    const fetchMock = vi.fn().mockResolvedValue(new Response(null, { status: 202 }));
+    vi.stubGlobal("fetch", fetchMock);
+    const { consumer, run } = fakeConsumer();
+    const wrapped = wrapConsumer(consumer, {
+      service: "payment-service",
+      controlPlaneUrl: "http://cp.local",
+    });
+
+    const failure = new Error("boom");
+    await wrapped.run({ eachMessage: vi.fn().mockRejectedValue(failure) });
+    const instrumented = run.mock.calls[0][0].eachMessage;
+
+    await expect(instrumented(fakePayload({ "x-correlation-id": "abc" }))).rejects.toThrow("boom");
+
+    const errorCall = fetchMock.mock.calls.find((call) => {
+      const body = JSON.parse(call[1].body as string);
+      return body.direction === "error";
+    });
+    expect(errorCall).toBeDefined();
+    const body = JSON.parse(errorCall![1].body as string);
+    expect(body).toMatchObject({
+      service: "payment-service",
+      direction: "error",
+      topic: "order.created",
+      correlationId: "abc",
+      error: "boom",
+    });
+  });
+});

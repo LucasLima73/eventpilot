@@ -1,10 +1,12 @@
 export interface TraceEvent {
   service: string;
-  direction: "produce" | "consume";
+  direction: "produce" | "consume" | "error";
   topic: string;
   correlationId: string | null;
   causationId: string | null;
   timestamp: string;
+  /** Only set when direction is "error". */
+  error?: string;
 }
 
 /**

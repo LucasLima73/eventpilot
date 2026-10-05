@@ -34,6 +34,8 @@ export function withDlq<T>(
   producer: Producer,
   handler: (payload: T) => Promise<void> | void,
   options: DlqOptions = DEFAULT_DLQ_OPTIONS,
+  /** Called once, after every retry is exhausted — a retry that eventually succeeds never calls this. */
+  onError?: (error: unknown) => void,
 ) {
   return async (payload: T, raw: RawMessage): Promise<void> => {
     let lastError: unknown;
@@ -46,6 +48,8 @@ export function withDlq<T>(
         if (attempt < options.maxRetries) await sleep(delayMs(attempt, options));
       }
     }
+
+    onError?.(lastError);
 
     await producer.send({
       topic: `${topic}.dlq`,

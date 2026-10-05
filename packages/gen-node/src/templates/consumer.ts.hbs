@@ -46,7 +46,13 @@ export function create{{pascalCase service.name}}Consumer(options: {{pascalCase 
             causationId: message.headers?.["x-causation-id"]?.toString(),
           };
 {{#if dlq}}
-          const guarded = withDlq(topic, dlqProducer, () => options.onMessage(topic, payload, headers));
+          const guarded = withDlq(
+            topic,
+            dlqProducer,
+            () => options.onMessage(topic, payload, headers),
+            undefined,
+            (err) => agent.reportError(topic, headers.correlationId ?? null, err),
+          );
           await guarded(payload, {
             key: message.key?.toString() ?? null,
             value: message.value,

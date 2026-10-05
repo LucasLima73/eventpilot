@@ -1,0 +1,77 @@
+package com.eventpilot.generated;
+
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.UUID;
+
+/**
+ * Reports traces to the EventPilot control plane (POST /api/traces) — the Java counterpart to
+ * @pilotevent/sdk-node. Not published to Maven Central (no Sonatype account set up yet), so
+ * this is generated straight into the project instead of pulled in as a dependency.
+ * Telemetry must never break the service it's attached to: every failure is swallowed.
+ */
+public final class EventPilotAgent {
+  private final String service;
+  private final String controlPlaneUrl;
+  private final HttpClient client =
+      HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
+
+  public EventPilotAgent(String service) {
+    this.service = service;
+    this.controlPlaneUrl =
+        System.getenv().getOrDefault("EVENTPILOT_CONTROL_PLANE_URL", "http://localhost:4000");
+  }
+
+  public static String newCorrelationId() {
+    return UUID.randomUUID().toString();
+  }
+
+  public void reportProduce(String topic, String correlationId, String causationId) {
+    send(topic, "produce", correlationId, causationId, null);
+  }
+
+  public void reportConsume(String topic, String correlationId, String causationId) {
+    send(topic, "consume", correlationId, causationId, null);
+  }
+
+  public void reportError(String topic, String correlationId, String errorMessage) {
+    send(topic, "error", correlationId, null, errorMessage);
+  }
+
+  private void send(
+      String topic, String direction, String correlationId, String causationId, String error) {
+    StringBuilder body = new StringBuilder("{");
+    body.append("\"service\":").append(quote(service)).append(",");
+    body.append("\"direction\":").append(quote(direction)).append(",");
+    body.append("\"topic\":").append(quote(topic)).append(",");
+    body.append("\"correlationId\":").append(quote(correlationId)).append(",");
+    body.append("\"causationId\":").append(quote(causationId)).append(",");
+    body.append("\"timestamp\":").append(quote(Instant.now().toString()));
+    if (error != null) {
+      body.append(",\"error\":").append(quote(error));
+    }
+    body.append("}");
+
+    try {
+      HttpRequest request =
+          HttpRequest.newBuilder()
+              .uri(URI.create(controlPlaneUrl + "/api/traces"))
+              .timeout(Duration.ofSeconds(2))
+              .header("Content-Type", "application/json")
+              .POST(HttpRequest.BodyPublishers.ofString(body.toString()))
+              .build();
+      client.sendAsync(request, HttpResponse.BodyHandlers.discarding());
+    } catch (Exception ignored) {
+      // control plane unreachable or down — not the caller's problem.
+    }
+  }
+
+  private static String quote(String value) {
+    if (value == null) return "null";
+    return "\"" + value.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
+  }
+}

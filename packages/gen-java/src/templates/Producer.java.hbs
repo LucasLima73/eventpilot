@@ -10,6 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 public class {{pascalCase service.name}}Producer implements AutoCloseable {
   private final Producer<String, String> producer;
+  private final EventPilotAgent agent;
 
   public {{pascalCase service.name}}Producer(String brokers) {
     Properties props = new Properties();
@@ -17,18 +18,21 @@ public class {{pascalCase service.name}}Producer implements AutoCloseable {
     props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
     this.producer = new KafkaProducer<>(props);
+    this.agent = new EventPilotAgent("{{service.name}}");
   }
 
 {{#each service.produces}}
   public void publish{{pascalCase this}}(String payloadJson, String correlationId, String causationId)
       throws ExecutionException, InterruptedException {
+    String resolvedCorrelationId = correlationId != null ? correlationId : EventPilotAgent.newCorrelationId();
+
     ProducerRecord<String, String> record = new ProducerRecord<>("{{this}}", payloadJson);
-    if (correlationId != null) {
-      record.headers().add(new RecordHeader("x-correlation-id", correlationId.getBytes()));
-    }
+    record.headers().add(new RecordHeader("x-correlation-id", resolvedCorrelationId.getBytes()));
     if (causationId != null) {
       record.headers().add(new RecordHeader("x-causation-id", causationId.getBytes()));
     }
+
+    agent.reportProduce("{{this}}", resolvedCorrelationId, causationId);
     producer.send(record).get();
   }
 
