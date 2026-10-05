@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@asyncapi/parser": "^3.6.3",
-    "@clack/prompts": "^0.7.0",
+    "@clack/prompts": "^1.8.1",
     "@pilotevent/broker-redpanda": "workspace:*",
     "@pilotevent/control-plane-api": "workspace:*",
     "@pilotevent/core": "workspace:*",
