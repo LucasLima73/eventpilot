@@ -1,6 +1,6 @@
 {
   "name": "@pilotevent/broker-redpanda",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Redpanda/Kafka broker adapter for EventPilot.",
   "license": "Apache-2.0",
   "publishConfig": {

@@ -11,22 +11,13 @@ import type {
 } from "@pilotevent/plugin-api";
 
 import { composeService } from "./compose.js";
+import { getMetrics } from "./metrics.js";
+import { readRange } from "./read-range.js";
 import { retentionToMs } from "./retention.js";
 
 export interface RedpandaAdapterOptions {
   brokers: string[];
   clientId?: string;
-}
-
-/**
- * Observability (getMetrics) and replay (readRange) need the control plane's
- * telemetry pipeline, not just the broker — tracked for Phase 3 in CLAUDE.md's
- * roadmap. They throw explicitly here instead of returning fabricated data.
- */
-function notYetAvailable(method: string): Error {
-  return new Error(
-    `${method}() is not available yet: it depends on the control plane (Phase 3 of the roadmap).`,
-  );
 }
 
 export function createRedpandaAdapter(options: RedpandaAdapterOptions): BrokerAdapter {
@@ -79,12 +70,12 @@ export function createRedpandaAdapter(options: RedpandaAdapterOptions): BrokerAd
       }
     },
 
-    async getMetrics(_topic: string): Promise<TopicMetrics> {
-      throw notYetAvailable("getMetrics");
+    async getMetrics(topic: string): Promise<TopicMetrics> {
+      return getMetrics(kafka, topic);
     },
 
-    readRange(_topic: string, _range: Range): AsyncIterable<EventRecord> {
-      throw notYetAvailable("readRange");
+    readRange(topic: string, range: Range): AsyncIterable<EventRecord> {
+      return readRange(kafka, topic, range);
     },
 
     async publish(topic: string, e: EventRecord): Promise<void> {

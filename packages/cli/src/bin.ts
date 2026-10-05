@@ -7,6 +7,8 @@ import { doctor } from "./commands/doctor.js";
 import { down } from "./commands/down.js";
 import { generate } from "./commands/generate.js";
 import { init } from "./commands/init.js";
+import { metrics } from "./commands/metrics.js";
+import { replay } from "./commands/replay.js";
 import { up } from "./commands/up.js";
 import { validate } from "./commands/validate.js";
 
@@ -15,7 +17,7 @@ const program = new Command();
 program
   .name("eventpilot")
   .description("Scaffold and run an event-driven architecture in one command.")
-  .version("0.0.3");
+  .version("0.0.5");
 
 program
   .command("init")
@@ -51,5 +53,18 @@ program
   .description("Add a feature (dlq, outbox, metrics, replay) to an existing project")
   .option("--force", "overwrite manually edited generated files")
   .action(add);
+
+program
+  .command("replay <topic>")
+  .description("Print events from a topic (defaults to everything currently on it)")
+  .option("--from <offset>", "start offset (inclusive)")
+  .option("--to <offset>", "end offset (inclusive)")
+  .option("--limit <count>", "stop after this many events")
+  .action(replay);
+
+program
+  .command("metrics <topic>")
+  .description("Measure throughput, consumer lag and DLQ count for a topic")
+  .action(metrics);
 
 await program.parseAsync(process.argv);

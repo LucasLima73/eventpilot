@@ -202,15 +202,17 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 
 ## 9. Comandos do CLI
 
-| Comando                    | O que faz                                                                                 |
-| -------------------------- | ----------------------------------------------------------------------------------------- |
-| `eventpilot init`          | Wizard: linguagem, broker, contratos, recursos → gera `eventpilot.yaml`, compose e código |
-| `eventpilot up` / `down`   | Sobe/derruba a infra Docker                                                               |
-| `eventpilot generate`      | Regenera arquivos a partir do YAML (idempotente)                                          |
-| `eventpilot add <feature>` | Adiciona recurso (`dlq`, `outbox`, `replay`...) a projeto existente                       |
-| `eventpilot validate`      | Valida YAML e contratos AsyncAPI/JSON Schema (usável no CI)                               |
-| `eventpilot doctor`        | Checa Docker, portas, versões                                                             |
-| `eventpilot dashboard`     | Abre o painel local                                                                       |
+| Comando                      | O que faz                                                                                 |
+| ---------------------------- | ----------------------------------------------------------------------------------------- |
+| `eventpilot init`            | Wizard: linguagem, broker, contratos, recursos → gera `eventpilot.yaml`, compose e código |
+| `eventpilot up` / `down`     | Sobe/derruba a infra Docker                                                               |
+| `eventpilot generate`        | Regenera arquivos a partir do YAML (idempotente)                                          |
+| `eventpilot add <feature>`   | Adiciona recurso (`dlq`, `outbox`) a projeto existente                                    |
+| `eventpilot validate`        | Valida YAML e contratos AsyncAPI/JSON Schema (usável no CI)                               |
+| `eventpilot doctor`          | Checa Docker, portas, versões                                                             |
+| `eventpilot dashboard`       | Sobe o control plane + painel local, empacotados no próprio CLI                           |
+| `eventpilot replay <topic>`  | Imprime eventos de um tópico (`--from`/`--to`/`--limit`)                                  |
+| `eventpilot metrics <topic>` | Mede throughput, consumer lag e contagem de DLQ de um tópico                              |
 
 ## 10. Roadmap
 
@@ -225,13 +227,13 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 - [x] `init` com wizard e geração do compose (Redpanda + registry)
 - [x] `up`, `down`, `doctor`
 - [x] Gerador Node/TS (producer/consumer básicos)
-- [ ] `getMetrics`/`readRange` do `BrokerAdapter` Redpanda (hoje lançam erro explícito — dependem do control plane, Fase 3)
+- [x] `getMetrics`/`readRange` do `BrokerAdapter` Redpanda implementados de verdade via kafkajs (ver Fase 3)
 
 **Fase 2 — Recursos**
 
 - [x] DLQ/retry (`@pilotevent/feature-dlq`, só node-ts por ora)
 - [x] Outbox (`@pilotevent/feature-outbox`, só node-ts por ora): tabela Postgres + `writeOutbox`/`startOutboxRelay` gerados; `eventpilot up` cria o container Postgres e aplica a migration automaticamente
-- [x] `add <feature>` (implementado para `dlq` e `outbox`; metrics/replay ainda recusam com mensagem clara)
+- [x] `add <feature>` (implementado para `dlq` e `outbox`; `metrics`/`replay` agora são comandos próprios — `eventpilot metrics`/`eventpilot replay` — não features do YAML)
 - [x] Tópicos declarados no YAML agora são provisionados de verdade no broker (`eventpilot up`/`generate`), incluindo `<topic>.dlq`
 - [x] `validate` valida o schema real dos contratos (`@asyncapi/parser` para AsyncAPI, `ajv` para JSON Schema) para todo tópico com `schema:` declarado
 - [x] Gerador Java (`@pilotevent/gen-java`, projeto Gradle, producer/consumer com `kafka-clients`; sem DLQ/Outbox ainda — essas features só suportam node-ts)
@@ -241,8 +243,8 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 - [x] Control plane API (`apps/control-plane-api`): `/api/config`, `/api/topics` (live do broker), `/ws/events`
 - [x] Painel (`apps/dashboard`, React+Vite+Tailwind+React Flow): tópicos, grafo produtor→tópico→consumidor que pulsa ao vivo conforme eventos chegam
 - [x] SDK Node (`@pilotevent/sdk-node`): envolve `Producer`/`Consumer` do kafkajs, propaga `correlation_id`/`causation_id` e reporta traces via `POST /api/traces`; o control plane deduplica contra o `LiveTail` (ver `apps/control-plane-api/README.md`). SDK Java ainda não existe
-- [ ] Métricas (throughput, lag, erros, DLQ) — depende de TimescaleDB; `getMetrics` do broker ainda lança erro explícito
-- [ ] Replay simples
+- [x] Métricas: `eventpilot metrics <topic>` mede throughput real (amostragem em ~1s), consumer lag (soma por grupo via admin) e contagem de DLQ direto no broker — **sem TimescaleDB ainda**, é um snapshot sob demanda, não série temporal persistida. `errorCount` sempre 0 (precisa do SDK reportar erros, não implementado)
+- [x] Replay simples: `eventpilot replay <topic> [--from --to --limit]`, implementado em `@pilotevent/broker-redpanda` com `AsyncQueue` + seek por offset/timestamp; sem range nenhum, repete tudo que já está no tópico até o watermark atual e para (não vira tail ao vivo)
 - [x] `eventpilot dashboard` empacota o control plane + painel dentro do próprio pacote `eventpilot` e sobe tudo com um comando só
 
 **Fase 4 — Open-core**
