@@ -4,9 +4,9 @@
 
 ## 1. O que é o EventPilot
 
-CLI + plataforma open-core para **arquitetura orientada a eventos**. Em um comando, o dev escolhe linguagem, broker, contratos e recursos; o EventPilot gera a infra local (Docker), o código base e um painel web para configurar tópicos/schemas/consumidores, ver o fluxo de eventos ao vivo e acompanhar métricas.
+CLI + plataforma **open source** (sem camada paga) para **arquitetura orientada a eventos**. Em um comando, o dev escolhe linguagem, broker, contratos e recursos; o EventPilot gera a infra local (Docker), o código base e um painel web para configurar tópicos/schemas/consumidores, ver o fluxo de eventos ao vivo e acompanhar métricas.
 
-**Inspirações de modelo:** n8n, Supabase, Grafana (núcleo open source auto-hospedável + camada paga de conveniência/time).
+**Inspirações de modelo:** n8n, Supabase, Grafana — pela experiência de produto e auto-hospedagem; sem a camada paga deles (EventPilot é 100% open source, decisão de 2026-10-05, ver seção 12).
 **Inspirações de DX:** `create-next-app`, `npm create vite`, Expo.
 
 ### Problema que resolve
@@ -37,7 +37,7 @@ CLI + plataforma open-core para **arquitetura orientada a eventos**. Em um coman
 - **Linguagens geradas:** Node/TypeScript e Java.
 - **Contratos:** AsyncAPI (validação) + JSON Schema.
 - **Recursos:** painel básico, grafo de eventos ao vivo, métricas (throughput, lag, erros, DLQ), DLQ/retry, Outbox, replay simples.
-- **Fora do MVP:** Saga, Avro, simulador de falhas, multi-ambiente, SSO/RBAC (pago).
+- **Fora do MVP:** Saga, Avro, simulador de falhas, multi-ambiente, SSO/RBAC.
 
 ## 4. Arquitetura
 
@@ -247,11 +247,11 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 - [x] Replay simples: `eventpilot replay <topic> [--from --to --limit]`, implementado em `@pilotevent/broker-redpanda` com `AsyncQueue` + seek por offset/timestamp; sem range nenhum, repete tudo que já está no tópico até o watermark atual e para (não vira tail ao vivo)
 - [x] `eventpilot dashboard` empacota o control plane + painel dentro do próprio pacote `eventpilot` e sobe tudo com um comando só
 
-**Fase 4 — Open-core**
+**Fase 4 — Lançamento**
 
 - [x] Licença: Apache-2.0 (seção 12)
-- [ ] Definir limites open source vs. pago (o que entra na camada paga ainda não foi decidido)
-- [ ] Versão hospedada, SSO/RBAC, auditoria, retenção longa (pago) — decisão de negócio, não implementar sem direção explícita do Lucas
+- [x] Sem camada paga — EventPilot é 100% open source, decisão definitiva do Lucas em 2026-10-05 (substitui a antiga discussão de "limites open-core vs. pago")
+- [ ] Versão hospedada, SSO/RBAC, auditoria, retenção longa — se algum dia entrar no roadmap, também é open source; não implementar sem o Lucas pedir explicitamente (ainda não há decisão de fazer isso)
 
 ## 11. Convenções
 
@@ -266,7 +266,7 @@ Regras: o `core` nunca importa um adapter/gerador diretamente — sempre via reg
 
 ## 12. Decisões tomadas (sem checagem prévia, a pedido do Lucas em 2026-10-04 — revisitar se algo não fizer sentido)
 
-1. **Licença:** Apache-2.0. Adoção máxima; permite terceiros revenderem hospedado, mas simplifica contribuição externa enquanto não há camada paga. Pode migrar para BSL/Sustainable Use mais perto do primeiro release público pago.
+1. **Licença:** Apache-2.0, definitiva. EventPilot é 100% open source — **sem camada paga, para sempre** (decisão do Lucas em 2026-10-05). Adoção máxima; permite terceiros revenderem hospedado, e isso é aceito conscientemente já que não há modelo de negócio pago a proteger.
 2. **Painel:** React + Vite. Implementado na Fase 3 (`apps/dashboard`).
 3. **Métricas:** decisão original era TimescaleDB; o que existe hoje (`eventpilot metrics`) é um snapshot sob demanda direto do broker, sem persistir série temporal — TimescaleDB continua de pé como a forma de guardar histórico quando isso for implementado.
 4. **Distribuição do CLI:** só `npx`/`npm` por enquanto (pacote `eventpilot`, scope `@pilotevent/*` livres no npm). Binário único (Go/pkg) fica para quando houver tração.

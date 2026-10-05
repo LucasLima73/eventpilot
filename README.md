@@ -1,6 +1,7 @@
 # EventPilot
 
-CLI + open-core platform for event-driven architecture. One command picks your language,
+CLI + open source platform for event-driven architecture — no paid tier, ever (see
+[`CLAUDE.md`](./CLAUDE.md), section 12). One command picks your language,
 broker, contracts and features, then EventPilot generates the local infra (Docker), the
 base service code, and a dashboard to configure topics/schemas/consumers, watch events
 flow live, and track metrics.
