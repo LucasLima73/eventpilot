@@ -6,10 +6,12 @@ import websocket from "@fastify/websocket";
 import { loadConfig } from "@pilotevent/core";
 import Fastify, { type FastifyInstance } from "fastify";
 
+import { EventBus } from "./event-bus.js";
 import { LiveTail } from "./live-tail.js";
 import { registerConfigRoute } from "./routes/config.js";
 import { registerEventsWebSocket } from "./routes/events-ws.js";
 import { registerTopicsRoute } from "./routes/topics.js";
+import { registerTracesRoute } from "./routes/traces.js";
 import { uniqueTopics } from "./topics.js";
 
 export interface CreateServerOptions {
@@ -32,11 +34,14 @@ export async function createServer(options: CreateServerOptions): Promise<Fastif
   }
 
   const config = await loadConfig(path.join(options.projectDir, "eventpilot.yaml"));
-  const liveTail = new LiveTail(options.brokers, uniqueTopics(config.services));
+  const bus = new EventBus();
+  const liveTail = new LiveTail(bus, options.brokers, uniqueTopics(config.services));
+  liveTail.ensureStarted();
 
   registerConfigRoute(app, options.projectDir);
   registerTopicsRoute(app, options.projectDir, options.brokers);
-  registerEventsWebSocket(app, liveTail);
+  registerTracesRoute(app, bus);
+  registerEventsWebSocket(app, bus);
 
   return app;
 }

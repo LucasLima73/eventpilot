@@ -1,6 +1,6 @@
 {
   "name": "eventpilot",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "EventPilot CLI — scaffold and run an event-driven architecture in one command.",
   "license": "Apache-2.0",
   "type": "module",

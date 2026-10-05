@@ -48,7 +48,7 @@ export function App() {
       {config && (
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
           <div className="lg:col-span-2">
-            <EventGraph config={config} />
+            <EventGraph config={config} events={events} />
           </div>
           <div className="flex flex-col gap-4">
             <TopicsTable topics={topics} error={topicsError} />

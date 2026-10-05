@@ -1,4 +1,5 @@
-import { Kafka, type Producer } from "kafkajs";
+import { createEventPilotAgent } from "@pilotevent/sdk-node";
+import { Kafka } from "kafkajs";
 
 export interface {{pascalCase service.name}}ProducerOptions {
   brokers: string[];
@@ -6,7 +7,8 @@ export interface {{pascalCase service.name}}ProducerOptions {
 
 export function create{{pascalCase service.name}}Producer(options: {{pascalCase service.name}}ProducerOptions) {
   const kafka = new Kafka({ clientId: "{{service.name}}", brokers: options.brokers });
-  const producer: Producer = kafka.producer();
+  const agent = createEventPilotAgent({ service: "{{service.name}}" });
+  const producer = agent.wrapProducer(kafka.producer());
 
   return {
     async connect(): Promise<void> {

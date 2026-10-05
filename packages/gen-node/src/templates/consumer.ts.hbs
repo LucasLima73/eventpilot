@@ -1,3 +1,4 @@
+import { createEventPilotAgent } from "@pilotevent/sdk-node";
 import { Kafka, type EachMessagePayload } from "kafkajs";
 {{#if dlq}}
 import { withDlq } from "./dlq.js";
@@ -20,7 +21,8 @@ export interface {{pascalCase service.name}}ConsumerOptions {
 
 export function create{{pascalCase service.name}}Consumer(options: {{pascalCase service.name}}ConsumerOptions) {
   const kafka = new Kafka({ clientId: "{{service.name}}", brokers: options.brokers });
-  const consumer = kafka.consumer({ groupId: options.groupId ?? "{{service.name}}" });
+  const agent = createEventPilotAgent({ service: "{{service.name}}" });
+  const consumer = agent.wrapConsumer(kafka.consumer({ groupId: options.groupId ?? "{{service.name}}" }));
 {{#if dlq}}
   const dlqProducer = kafka.producer();
 {{/if}}

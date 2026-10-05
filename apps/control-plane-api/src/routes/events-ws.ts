@@ -1,10 +1,10 @@
 import type { FastifyInstance } from "fastify";
 
-import type { LiveTail } from "../live-tail.js";
+import type { EventBus } from "../event-bus.js";
 
-export function registerEventsWebSocket(app: FastifyInstance, liveTail: LiveTail): void {
+export function registerEventsWebSocket(app: FastifyInstance, bus: EventBus): void {
   app.get("/ws/events", { websocket: true }, (socket) => {
-    const unsubscribe = liveTail.subscribe((event) => {
+    const unsubscribe = bus.subscribe((event) => {
       socket.send(JSON.stringify(event));
     });
     socket.on("close", unsubscribe);

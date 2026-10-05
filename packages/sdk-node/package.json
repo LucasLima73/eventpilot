@@ -1,7 +1,7 @@
 {
-  "name": "@pilotevent/gen-node",
-  "version": "0.0.2",
-  "description": "Node/TypeScript language generator for EventPilot (producer/consumer templates).",
+  "name": "@pilotevent/sdk-node",
+  "version": "0.0.1",
+  "description": "Lightweight Node agent for EventPilot: propagates correlation_id/causation_id on kafkajs producers/consumers and reports traces to the control plane.",
   "license": "Apache-2.0",
   "publishConfig": {
     "access": "public"
@@ -19,18 +19,18 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json && mkdir -p dist/templates && cp src/templates/*.hbs dist/templates/",
+    "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run"
   },
-  "dependencies": {
-    "@pilotevent/plugin-api": "workspace:*",
-    "handlebars": "^4.7.8"
+  "peerDependencies": {
+    "kafkajs": "^2.2.4"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
+    "kafkajs": "^2.2.4",
     "typescript": "^5.6.2",
     "vitest": "^2.1.1"
   }

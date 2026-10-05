@@ -6,6 +6,8 @@ export interface LiveEvent {
   value: string | null;
   correlationId: string | null;
   causationId: string | null;
+  service: string | null;
+  direction: "produce" | "consume" | "broker-tail";
   timestamp: string;
 }
 

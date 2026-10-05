@@ -7,6 +7,7 @@ Routes:
 
 - `GET /api/config` — parsed `eventpilot.yaml` from `--project` (default: cwd).
 - `GET /api/topics` — live topic list from the broker (via `@pilotevent/broker-redpanda`).
+- `POST /api/traces` — ingests a trace event pushed by a `@pilotevent/sdk-node` agent.
 - `GET /ws/events` — WebSocket; streams each event as JSON as it's produced.
 
 ## Running
@@ -20,8 +21,16 @@ and the broker in that config must already be reachable (`eventpilot up` first).
 
 ## Note on the live event feed
 
-This tails the broker's topics directly with `kafkajs`. CLAUDE.md's architecture
-(section 4) describes a different, more complete design: a lightweight SDK/agent
-embedded in the user's services that pushes traces (with `correlation_id`/`causation_id`)
-to the control plane over API/WebSocket. That SDK doesn't exist yet — this is an
-interim simplification so the dashboard has something real to show.
+Events reach the dashboard's `/ws/events` feed from two sources, merged by `EventBus`
+(`src/event-bus.ts`):
+
+1. **`LiveTail`** (`src/live-tail.ts`) tails the broker's topics directly with `kafkajs`.
+   Zero-instrumentation fallback — works even for services that haven't adopted the SDK.
+2. **`POST /api/traces`**, pushed by a `@pilotevent/sdk-node` agent embedded in a service
+   (see CLAUDE.md section 4). Carries `service` and `direction` (`produce`/`consume`),
+   which `LiveTail` can't know on its own.
+
+When a service uses the SDK, both sources see the same produced message once each;
+`EventBus` dedupes a `broker-tail` report against an SDK `produce` report for the same
+topic + `correlationId` within a short window. `consume` reports are never deduped — each
+represents a distinct service actually receiving the message.
