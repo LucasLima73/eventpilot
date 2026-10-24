@@ -29,7 +29,7 @@
     "@pilotevent/gen-node": "workspace:*",
     "@pilotevent/plugin-api": "workspace:*",
     "ajv": "^8.20.0",
-    "commander": "^12.1.0",
+    "commander": "^15.0.0",
     "pg": "^8.13.0",
     "yaml": "^2.5.1"
   },
